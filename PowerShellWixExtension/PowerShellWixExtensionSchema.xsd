@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PowerShellWixExtensionSchema"
+    targetNamespace="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema"
+    elementFormDefault="qualified"
+    xmlns="http://schemas.gardiner.net.au/PowerShellWixExtensionScheman"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xse="http://schemas.microsoft.com/wix/2005/XmlSchemaExtension"
+>
+  <xs:annotation>
+    <xs:documentation>
+      The schema for the PowerShellWixExtension WiX Extension
+    </xs:documentation>
+  </xs:annotation>
+  
+  <xs:element name="Script">
+    <xs:annotation>
+      <xs:appinfo>
+        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Product" />
+        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Fragment" />
+      </xs:appinfo>
+      <xs:documentation>
+        Embed PowerShell commands using CDATA
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="Id"
+                        use="required"
+                        type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The ID for the element.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+
+        </xs:extension>
+        
+      </xs:simpleContent>
+      
+    </xs:complexType>
+    
+  </xs:element>
+
+  <xs:element name="File">
+    <xs:annotation>
+      <xs:appinfo>
+        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Product" />
+        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Fragment" />
+      </xs:appinfo>
+      <xs:documentation>
+        Run a PowerShell script file
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType>
+      <xs:attribute name="Id"
+              use="required"
+              type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The ID for the element.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+
+      <xs:attribute name="File" use="required" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The reference to a PowerShell file</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      
+      <xs:attribute name="Arguments" use="optional" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The arguments for PowerShell file</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

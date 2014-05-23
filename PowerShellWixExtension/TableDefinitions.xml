@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tableDefinitions xmlns="http://schemas.microsoft.com/wix/2006/tables">
+
+  <tableDefinition name="PowerShellScripts" createSymbols="yes">
+    <columnDefinition
+      name="Id"
+      type="string"
+      length="72"
+      primaryKey="yes"
+      category="identifier"
+      description="Primary key for this element" />
+
+    <columnDefinition
+      name="Script"
+      type="string"
+      category="text"
+      length="0"
+      nullable="no"
+      description="Script Data" />
+
+  </tableDefinition>
+
+  <tableDefinition name="PowerShellFiles" createSymbols="yes">
+    <columnDefinition
+      name="Id"
+      type="string"
+      length="72"
+      primaryKey="yes"
+      category="identifier"
+      description="Primary key for this element" />
+
+    <columnDefinition name="File" 
+                      type="string" length="255" modularize="property"
+                    category="formatted" description="The .XML file in which to write the information"/>
+    
+    <columnDefinition
+      name="Arguments"
+      type="string"
+      category="text"
+      length="0"
+      nullable="yes"
+      description="Arguments" />
+
+  </tableDefinition>
+
+</tableDefinitions>

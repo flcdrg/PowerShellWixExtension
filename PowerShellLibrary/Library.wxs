@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <Binary Id="CA_DLL" SourceFile="$(var.PowerShellActions.TargetDir)PowerShellActions.CA.dll" />
+
+    <CustomAction Id="PowerShellScriptsImmediate"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellScriptsImmediate"
+                  Execute="immediate"
+                  Return="check" />
+
+    <CustomAction Id="PowerShellScriptsDeferred"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellScriptsDeferred"
+                  Impersonate="yes"
+                  Execute="deferred"
+                  Return="check" />
+
+    <CustomAction Id="PowerShellFilesImmediate"
+              BinaryKey="CA_DLL"
+              DllEntry="PowerShellFilesImmediate"
+              Execute="immediate"
+              Return="check" />
+
+    <CustomAction Id="PowerShellFilesDeferred"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellFilesDeferred"
+                  Impersonate="yes"
+                  Execute="deferred"
+                  Return="check" />
+
+    <InstallExecuteSequence>
+      <Custom Action="PowerShellScriptsImmediate"
+              Before="PowerShellScriptsDeferred">
+        NOT Installed
+      </Custom>
+
+      <Custom Action="PowerShellScriptsDeferred"
+              After="InstallFiles">
+        NOT Installed
+      </Custom>
+
+      <Custom Action="PowerShellFilesImmediate"
+        Before="PowerShellFilesDeferred">
+        NOT Installed
+      </Custom>
+
+      <Custom Action="PowerShellFilesDeferred"
+              After="InstallFiles">
+        NOT Installed
+      </Custom>
+
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>
