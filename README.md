@@ -19,7 +19,10 @@ Getting Started
    
 4. To execute inline script use
 
+`
+
     <powershell:Script Id="Script2">
+
       <![CDATA[
         
         # Write-Host "Number 2";
@@ -32,3 +35,4 @@ Getting Started
         
         ]]>
     </powershell:Script>
+`
