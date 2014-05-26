@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Security;
+
 using Microsoft.Deployment.WindowsInstaller;
 
 namespace PowerShellActions
@@ -21,6 +23,7 @@ namespace PowerShellActions
             _progressActivity = string.Empty;
         }
 
+        [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules", Justification = "Reviewed. Suppression is OK here.")]
         public override PSHostRawUserInterface RawUI
         {
             get
@@ -98,7 +101,7 @@ namespace PowerShellActions
             // Specify that an update of the progress bar’s position in
             // this case means to move it forward by one increment.
             hProgressRec[1] = 2;
-            hProgressRec[2] = CustomActions.iTickIncrement;
+            hProgressRec[2] = CustomActions.TickIncrement;
             hProgressRec[3] = 0;
 
             _session.Message(InstallMessage.ActionData, hActionRec);
@@ -121,50 +124,5 @@ namespace PowerShellActions
         {
             throw new NotImplementedException("Prompt");
         }
-
-        private void DisplayActionData(string message)
-        {
-            Record record = new Record(1);
-            record[1] = message;
-            _session.Message(InstallMessage.ActionData, record);
-        }
-
-        private void NumberOfTicksPerActionData(int ticks)
-        {
-            Record record = new Record(3);
-            record[1] = "1";
-            record[2] = ticks.ToString();
-            record[3] = "1";
-            _session.Message(InstallMessage.Progress, record);
-        }
-
-        private void ResetProgress()
-        {
-            Record record = new Record(4);
-            record[1] = "0";
-            record[2] = "100";
-            record[3] = "0";
-            record[4] = "0";
-            _session.Message(InstallMessage.Progress, record);
-        }
-
-        private void UpdateProgress(int tick)
-        {
-            var record = new Record(3);
-            record[1] = 2;
-            record[2] = tick;
-            record[3] = 0;
-
-            _session.Message(InstallMessage.Progress, record);
-        }
-
-        private void ExtendProgressForCustomAction(int total)
-        {
-            var record = new Record(2);
-            record[1] = "3";
-            record[2] = total.ToString();
-            _session.Message(InstallMessage.Progress, record);
-        }
-
     }
 }

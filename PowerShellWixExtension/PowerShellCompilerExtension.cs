@@ -9,43 +9,45 @@ namespace PowerShellWixExtension
 {
     public class PowerShellCompilerExtension : CompilerExtension
     {
-        private readonly XmlSchema schema;
+        private readonly XmlSchema _schema;
 
         public PowerShellCompilerExtension()
         {
-            schema = LoadXmlSchemaHelper( Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellWixExtensionSchema.xsd" );
+            _schema = LoadXmlSchemaHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellWixExtensionSchema.xsd");
         }
 
         public override XmlSchema Schema
         {
-            get { return schema; }
+            get
+            {
+                return _schema;
+            }
         }
 
-        public override void ParseElement( SourceLineNumberCollection sourceLineNumbers, XmlElement parentElement, XmlElement element, params string[] contextValues )
+        public override void ParseElement(SourceLineNumberCollection sourceLineNumbers, XmlElement parentElement, XmlElement element, params string[] contextValues)
         {
-            switch ( parentElement.LocalName )
+            switch (parentElement.LocalName)
             {
                 case "Product":
                 case "Fragment":
-                    switch ( element.LocalName )
+                    switch (element.LocalName)
                     {
                         case "Script":
-                            ParseSuperElement( element );
+                            ParseSuperElement(element);
                             break;
                         case "File":
                             ParseFileElement(element);
                             break;
                         default:
-                            Core.UnexpectedElement(
-                                parentElement,
-                                element );
+                            Core.UnexpectedElement(parentElement, element);
                             break;
                     }
+
                     break;
                 default:
                     Core.UnexpectedElement(
                         parentElement,
-                        element );
+                        element);
                     break;
             }
         }
@@ -61,62 +63,45 @@ namespace PowerShellWixExtension
             foreach (XmlAttribute attribute in node.Attributes)
             {
                 if (attribute.NamespaceURI.Length == 0 ||
-                     attribute.NamespaceURI == schema.TargetNamespace)
+                    attribute.NamespaceURI == _schema.TargetNamespace)
                 {
                     switch (attribute.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(
-                                sourceLineNumber,
-                                attribute);
+                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
                             break;
                         case "File":
                             file = Core.GetAttributeValue(sourceLineNumber, attribute, false);
                             break;
                         case "Arguments":
-                            arguments = Core.GetAttributeValue(
-                                sourceLineNumber,
-                                attribute);
+                            arguments = Core.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         default:
-                            Core.UnexpectedAttribute(
-                                sourceLineNumber,
-                                attribute);
+                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
                             break;
                     }
                 }
                 else
                 {
-                    Core.UnsupportedExtensionAttribute(
-                        sourceLineNumber,
-                        attribute);
+                    Core.UnsupportedExtensionAttribute(sourceLineNumber, attribute);
                 }
             }
 
             if (string.IsNullOrEmpty(superElementId))
             {
                 Core.OnMessage(
-                    WixErrors.ExpectedAttribute(
-                        sourceLineNumber,
-                        node.Name,
-                        "Id"));
+                    WixErrors.ExpectedAttribute(sourceLineNumber, node.Name, "Id"));
             }
 
             if (string.IsNullOrEmpty(file))
             {
                 Core.OnMessage(
-                    WixErrors.ExpectedElement(
-                        sourceLineNumber,
-                        node.Name,
-                        "File"));
+                    WixErrors.ExpectedElement(sourceLineNumber, node.Name, "File"));
             }
 
             if (!Core.EncounteredError)
             {
-                Row superElementRow =
-                    Core.CreateRow(
-                        sourceLineNumber,
-                        "PowerShellFiles");
+                Row superElementRow = Core.CreateRow(sourceLineNumber, "PowerShellFiles");
 
                 superElementRow[0] = superElementId;
                 superElementRow[1] = file;
@@ -124,82 +109,65 @@ namespace PowerShellWixExtension
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
-
         }
 
-        private void ParseSuperElement( XmlNode node )
+        private void ParseSuperElement(XmlNode node)
         {
-            SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers( node );
+            SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
 
             string superElementId = null;
             string scriptData = null;
 
-            foreach ( XmlAttribute attribute in node.Attributes )
+            foreach (XmlAttribute attribute in node.Attributes)
             {
-                if ( attribute.NamespaceURI.Length == 0 ||
-                     attribute.NamespaceURI == schema.TargetNamespace )
+                if (attribute.NamespaceURI.Length == 0 ||
+                    attribute.NamespaceURI == _schema.TargetNamespace)
                 {
-                    switch ( attribute.LocalName )
+                    switch (attribute.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(
-                                sourceLineNumber,
-                                attribute );
+                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
                             break;
                         default:
-                            Core.UnexpectedAttribute(
-                                sourceLineNumber,
-                                attribute );
+                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
                             break;
                     }
                 }
                 else
                 {
-                    Core.UnsupportedExtensionAttribute(
-                        sourceLineNumber,
-                        attribute );
+                    Core.UnsupportedExtensionAttribute(sourceLineNumber, attribute);
                 }
             }
 
-            if ( node.HasChildNodes )
+            if (node.HasChildNodes)
             {
-                var cdata = node.ChildNodes[ 0 ] as XmlCDataSection;
+                var cdata = node.ChildNodes[0] as XmlCDataSection;
 
-                if ( cdata != null )
-                    // Need to encode, as column doesn't like having line feeds 
-                    scriptData = Convert.ToBase64String( Encoding.Unicode.GetBytes( cdata.Data ) );
+                if (cdata != null)
+
+                    // Need to encode, as column doesn't like having line feeds
+                    scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(cdata.Data));
             }
 
-            if ( string.IsNullOrEmpty( superElementId ) )
+            if (string.IsNullOrEmpty(superElementId))
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedAttribute(
-                        sourceLineNumber,
-                        node.Name,
-                        "Id" ) );
+                Core.OnMessage(WixErrors.ExpectedAttribute(sourceLineNumber, node.Name, "Id"));
             }
 
-            if ( string.IsNullOrEmpty( scriptData ) )
+            if (string.IsNullOrEmpty(scriptData))
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedElement(
-                        sourceLineNumber,
-                        node.Name,
-                        "CDATA" ) );
+                Core.OnMessage(WixErrors.ExpectedElement(sourceLineNumber, node.Name, "CDATA"));
             }
 
-            if ( !Core.EncounteredError )
+            if (!Core.EncounteredError)
             {
-                Row superElementRow =
-                    Core.CreateRow(
-                        sourceLineNumber,
-                        "PowerShellScripts" );
+                Row superElementRow = Core.CreateRow(sourceLineNumber, "PowerShellScripts");
 
-                superElementRow[ 0 ] = superElementId;
-                superElementRow[ 1 ] = scriptData;
+                superElementRow[0] = superElementId;
+                superElementRow[1] = scriptData;
             }
 
-            Core.CreateWixSimpleReferenceRow( sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate" );
+            Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");
         }
     }
 }

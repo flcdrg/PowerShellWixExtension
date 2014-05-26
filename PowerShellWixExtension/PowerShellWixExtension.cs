@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.Tools.WindowsInstallerXml;
 
 namespace PowerShellWixExtension
@@ -14,7 +13,7 @@ namespace PowerShellWixExtension
         {
             get
             {
-                return _compilerExtension ?? ( _compilerExtension = new PowerShellCompilerExtension() );
+                return _compilerExtension ?? (_compilerExtension = new PowerShellCompilerExtension());
             }
         }
 
@@ -22,13 +21,13 @@ namespace PowerShellWixExtension
         {
             get
             {
-                return _tableDefinitions ?? ( _tableDefinitions = LoadTableDefinitionHelper( Assembly.GetExecutingAssembly(), "PowerShellWixExtension.TableDefinitions.xml" ) );
+                return _tableDefinitions ?? (_tableDefinitions = LoadTableDefinitionHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.TableDefinitions.xml"));
             }
         }
 
-        public override Library GetLibrary( TableDefinitionCollection tableDefinitions )
+        public override Library GetLibrary(TableDefinitionCollection tableDefinitions)
         {
-            return _library ?? ( _library = LoadLibraryHelper( Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellLibrary.wixlib", tableDefinitions ) );
+            return _library ?? (_library = LoadLibraryHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellLibrary.wixlib", tableDefinitions));
         }
     }
 }

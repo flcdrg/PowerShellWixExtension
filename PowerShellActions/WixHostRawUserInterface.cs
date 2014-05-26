@@ -15,7 +15,7 @@ namespace PowerShellActions
         {
             get
             {
-                throw new NotImplementedException( "KeyAvailable" );
+                throw new NotImplementedException("KeyAvailable");
             }
         }
 
@@ -23,7 +23,7 @@ namespace PowerShellActions
         {
             get
             {
-                throw new NotImplementedException( "MaxPhysicalWindowSize" );
+                throw new NotImplementedException("MaxPhysicalWindowSize");
             }
         }
 
@@ -31,7 +31,7 @@ namespace PowerShellActions
         {
             get
             {
-                throw new NotImplementedException( "MaxWindowSize" );
+                throw new NotImplementedException("MaxWindowSize");
             }
         }
 
@@ -39,29 +39,29 @@ namespace PowerShellActions
         public override Size WindowSize { get; set; }
         public override string WindowTitle { get; set; }
 
-        public override KeyInfo ReadKey( ReadKeyOptions options )
+        public override KeyInfo ReadKey(ReadKeyOptions options)
         {
-            throw new NotImplementedException( "ReadKey" );
+            throw new NotImplementedException("ReadKey");
         }
 
         public override void FlushInputBuffer()
         {
         }
 
-        public override void SetBufferContents( Coordinates origin, BufferCell[,] contents )
+        public override void SetBufferContents(Coordinates origin, BufferCell[,] contents)
         {
         }
 
-        public override void SetBufferContents( Rectangle rectangle, BufferCell fill )
+        public override void SetBufferContents(Rectangle rectangle, BufferCell fill)
         {
         }
 
-        public override BufferCell[,] GetBufferContents( Rectangle rectangle )
+        public override BufferCell[,] GetBufferContents(Rectangle rectangle)
         {
-            throw new NotImplementedException( "GetBufferContents" );
+            throw new NotImplementedException("GetBufferContents");
         }
 
-        public override void ScrollBufferContents( Rectangle source, Coordinates destination, Rectangle clip, BufferCell fill )
+        public override void ScrollBufferContents(Rectangle source, Coordinates destination, Rectangle clip, BufferCell fill)
         {
         }
     }

@@ -51,5 +51,10 @@
       </Custom>
 
     </InstallExecuteSequence>
+
+    <UI>
+      <ProgressText Action="PowerShellFilesDeferred">PowerShell Files</ProgressText>
+      <ProgressText Action="PowerShellScriptsDeferred">PowerShell Inline</ProgressText>
+    </UI>
   </Fragment>
 </Wix>
