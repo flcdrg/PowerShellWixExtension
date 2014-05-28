@@ -81,5 +81,7 @@
   -->
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb; $(TargetPath)" DestinationFolder="..\Libs" SkipUnchangedFiles="true" />
+    <MakeDir Directories="..\NuGet\tools\lib" Condition="!exists('..\NuGet\tools\lib')"/>
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb; $(TargetPath)" DestinationFolder="..\NuGet\tools\lib" SkipUnchangedFiles="true" />
   </Target>
 </Project>

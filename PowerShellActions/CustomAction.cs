@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Web;
 using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -33,8 +32,7 @@ namespace PowerShellActions
 
                 foreach (Record row in view)
                 {
-                    // XML comes in with entities already. We need to decode these before putting them back into XML again
-                    var args = HttpUtility.HtmlDecode(session.Format(row["Arguments"].ToString()));
+                    var args = session.Format(row["Arguments"].ToString());
 
                     session.Log("args '{0}'", args);
 
@@ -75,6 +73,8 @@ namespace PowerShellActions
         public static ActionResult PowerShellFilesDeferred(Session session)
         {
             session.Log("PowerShellFilesDeferred start");
+
+
             var hActionRec = new Record(3);
             var hProgressRec = new Record(3);
 

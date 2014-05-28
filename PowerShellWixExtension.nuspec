@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-16"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata minClientVersion="2.7">
+        <id>PowerShellWixExtension</id>
+        <version>1.1</version>
+        <title>Wix Extension for PowerShell</title>
+        <summary>Wix Extension that allows running PowerShell scripts</summary>
+        <description>An extension for Wix that allows running PowerShell scripts, either from .ps1 files included in the MSI, or by embedding PowerShell script directly</description>
+        <authors>David Gardiner</authors>
+        <owners>David Gardiner</owners>
+        <projectUrl>https://github.com/flcdrg/PowerShellWixExtension/</projectUrl>
+        <licenseUrl>https://github.com/flcdrg/PowerShellWixExtension/blob/master/LICENSE.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>WiX PowerShell MSI Installer XML</tags>
+		<releaseNotes>
+			Initial release
+		</releaseNotes>
+    </metadata>
+	<files>
+		<file src="NuGet\content\*.*" target="content" /> 
+		<file src="NuGet\tools\**\*.*" target="tools" /> 
+	</files>
+
+</package>
