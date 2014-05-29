@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 using Microsoft.Deployment.WindowsInstaller;
@@ -24,13 +25,18 @@ namespace PowerShellActions
 
         internal PowerShellTask(string file, string arguments, Session session)
         {
-            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session));
+            RunspaceConfiguration runspaceConfiguration = RunspaceConfiguration.Create();
+            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session), runspaceConfiguration);
+
+            runspace.Open();
+
+            var scriptInvoker = new RunspaceInvoke(runspace);
+            scriptInvoker.Invoke("Set-ExecutionPolicy RemoteSigned");
 
             _pipeline = runspace.CreatePipeline();
 
             // http://stackoverflow.com/a/530418/25702
             _pipeline.Commands.AddScript(string.Format("& '{0}' {1}", file, arguments));
-            _pipeline.Runspace.Open();
             _pipeline.Runspace.SessionStateProxy.SetVariable("session", session);
         }
 
