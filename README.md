@@ -3,9 +3,13 @@ PowerShellWixExtension
 
 A Wix Extension for running PowerShell scripts
 
+NuGet Package
+-------------
+Ready to add to a Wix project - https://www.nuget.org/packages/PowerShellWixExtension/
+
 Getting Started
 ---------------
-1. Add a reference to the PowerShellWixExtension.dll in your Wix Setup Project
+1. Add a reference to the PowerShellWixExtension.dll in your Wix Setup Project (NuGet package recommended)
 2. Add namespace to .wxs file 
 `
     <?xml version="1.0" encoding="UTF-8"?>
