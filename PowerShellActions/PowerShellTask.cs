@@ -31,7 +31,7 @@ namespace PowerShellActions
             runspace.Open();
 
             var scriptInvoker = new RunspaceInvoke(runspace);
-            scriptInvoker.Invoke("Set-ExecutionPolicy RemoteSigned");
+            scriptInvoker.Invoke("Set-ExecutionPolicy RemoteSigned -Scope Process");
 
             _pipeline = runspace.CreatePipeline();
 
