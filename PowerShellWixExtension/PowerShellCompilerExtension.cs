@@ -33,7 +33,7 @@ namespace PowerShellWixExtension
                     switch (element.LocalName)
                     {
                         case "Script":
-                            ParseSuperElement(element);
+                            ParseScriptElement(element);
                             break;
                         case "File":
                             ParseFileElement(element);
@@ -59,6 +59,7 @@ namespace PowerShellWixExtension
             string superElementId = null;
             string file = null;
             string arguments = null;
+            var elevated = YesNoType.No;
 
             foreach (XmlAttribute attribute in node.Attributes)
             {
@@ -75,6 +76,9 @@ namespace PowerShellWixExtension
                             break;
                         case "Arguments":
                             arguments = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            break;
+                        case "Elevated":
+                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         default:
                             Core.UnexpectedAttribute(sourceLineNumber, attribute);
@@ -106,17 +110,19 @@ namespace PowerShellWixExtension
                 superElementRow[0] = superElementId;
                 superElementRow[1] = file;
                 superElementRow[2] = arguments;
+                superElementRow[3] = elevated == YesNoType.Yes ? 1 : 0;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
         }
 
-        private void ParseSuperElement(XmlNode node)
+        private void ParseScriptElement(XmlNode node)
         {
             SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
 
             string superElementId = null;
             string scriptData = null;
+            var elevated = YesNoType.No;
 
             foreach (XmlAttribute attribute in node.Attributes)
             {
@@ -128,6 +134,10 @@ namespace PowerShellWixExtension
                         case "Id":
                             superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
                             break;
+                        case "Elevated":
+                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            break;
+
                         default:
                             Core.UnexpectedAttribute(sourceLineNumber, attribute);
                             break;
@@ -165,6 +175,7 @@ namespace PowerShellWixExtension
 
                 superElementRow[0] = superElementId;
                 superElementRow[1] = scriptData;
+                superElementRow[2] = elevated == YesNoType.Yes ? 1 : 0;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");

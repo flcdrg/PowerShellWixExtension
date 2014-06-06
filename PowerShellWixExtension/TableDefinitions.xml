@@ -18,6 +18,16 @@
       nullable="no"
       description="Script Data" />
 
+    <columnDefinition
+      name="Elevated"
+      type="number"
+      category="integer"
+      length="0"
+       minValue="0"
+       maxValue="1"
+      nullable="no"
+      description="Run as elevated" />
+
   </tableDefinition>
 
   <tableDefinition name="PowerShellFiles" createSymbols="yes">
@@ -29,10 +39,10 @@
       category="identifier"
       description="Primary key for this element" />
 
-    <columnDefinition name="File" 
+    <columnDefinition name="File"
                       type="string" length="255" modularize="property"
                     category="formatted" description="The .XML file in which to write the information"/>
-    
+
     <columnDefinition
       name="Arguments"
       type="string"
@@ -40,6 +50,16 @@
       length="0"
       nullable="yes"
       description="Arguments" />
+
+    <columnDefinition
+  name="Elevated"
+  type="number"
+  category="integer"
+  length="0"
+   minValue="0"
+   maxValue="1"
+  nullable="no"
+  description="Run as elevated" />
 
   </tableDefinition>
 

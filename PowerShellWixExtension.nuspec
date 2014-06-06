@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>PowerShellWixExtension</id>
-        <version>1.3</version>
+        <version>1.4</version>
         <title>Wix Extension for PowerShell</title>
         <summary>Wix Extension that allows running PowerShell scripts</summary>
         <description>An extension for Wix that allows running PowerShell scripts, either from .ps1 files included in the MSI, or by embedding PowerShell script directly</description>
@@ -13,7 +13,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>WiX PowerShell MSI Installer XML</tags>
         <releaseNotes>
-Use -Scope on Set-ExecutionPolicy, to fix "System.Management.Automation.CmdletInvocationException: Access to the registry key 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell' is denied. ---> System.UnauthorizedAccessException: Access to the registry key 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell' is denied."
+            Add 'Elevated' attribute to indicate that script or file should be run using elevated permission (SYSTEM) instead of impersonating the current user
         </releaseNotes>
     </metadata>
     <files>

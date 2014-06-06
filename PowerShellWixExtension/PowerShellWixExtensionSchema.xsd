@@ -5,12 +5,15 @@
     xmlns="http://schemas.gardiner.net.au/PowerShellWixExtensionScheman"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xse="http://schemas.microsoft.com/wix/2005/XmlSchemaExtension"
+           xmlns:wix="http://schemas.microsoft.com/wix/2006/wi"
 >
   <xs:annotation>
     <xs:documentation>
       The schema for the PowerShellWixExtension WiX Extension
     </xs:documentation>
   </xs:annotation>
+
+  <xs:import namespace="http://schemas.microsoft.com/wix/2006/wi" />
   
   <xs:element name="Script">
     <xs:annotation>
@@ -34,8 +37,13 @@
             </xs:annotation>
           </xs:attribute>
 
+          <xs:attribute name="Elevated" use="optional" default="no" type="wix:YesNoType">
+            <xs:annotation>
+              <xs:documentation>Set to true if script should run as an elevated user</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
-        
+       
       </xs:simpleContent>
       
     </xs:complexType>
@@ -73,6 +81,13 @@
           <xs:documentation>The arguments for PowerShell file</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+
+      <xs:attribute name="Elevated" use="optional" default="no" type="wix:YesNoType">
+        <xs:annotation>
+          <xs:documentation>Set to true if script should run as an elevated user</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+
     </xs:complexType>
   </xs:element>
 </xs:schema>

@@ -14,18 +14,126 @@ namespace PowerShellActions
         // Specify or calculate the total number of ticks the custom action adds to the length of the ProgressBar
         public const uint TotalTicks = TickIncrement * NumberItems;
         private const uint NumberItems = 100;
+        private const string PowerShellFilesElevatedDeferredProperty = "PowerShellFilesElevatedDeferred";
+        private const string PowerShellFilesDeferredProperty = "PowerShellFilesDeferred";
+        private const string PowerShellScriptsElevatedDeferredProperty = "PowerShellScriptsElevatedDeferred";
+        private const string PowerShellScriptsDeferredProperty = "PowerShellScriptsDeferred";
 
         [CustomAction]
         public static ActionResult PowerShellFilesImmediate(Session session)
         {
+            return FilesImmediate(session, 0, PowerShellFilesDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellFilesElevatedImmediate(Session session)
+        {
+            return FilesImmediate(session, 1, PowerShellFilesElevatedDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellFilesDeferred(Session session)
+        {
+            session.Log("PowerShellFilesDeferred start");
+
+            return FilesDeferred(session, PowerShellFilesDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellFilesElevatedDeferred(Session session)
+        {
+            session.Log("PowerShellFilesElevatedDeferred start");
+
+            return FilesDeferred(session, PowerShellFilesElevatedDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsImmediate(Session session)
+        {
+            return ScriptsImmediate(session, 0, PowerShellScriptsDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsElevatedImmediate(Session session)
+        {
+            return ScriptsImmediate(session, 1, PowerShellScriptsElevatedDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsDeferred(Session session)
+        {
+            return ScriptsDeferred(session, PowerShellScriptsDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsElevatedDeferred(Session session)
+        {
+            return ScriptsDeferred(session, PowerShellScriptsElevatedDeferredProperty);
+        }
+
+        private static ActionResult ScriptsDeferred(Session session, string deferredProperty)
+        {
+            var hActionRec = new Record(3);
+            var hProgressRec = new Record(3);
+
+            // Installer is executing the installation script. Set up a
+            // record specifying appropriate templates and text for
+            // messages that will inform the user about what the custom
+            // action is doing. Tell the installer to use this template and
+            // text in progress messages.
+            hActionRec[1] = deferredProperty;
+            hActionRec[2] = "PowerShell Scripts";
+            hActionRec[3] = "[1] of [2], [3]";
+            MessageResult iResult = session.Message(InstallMessage.ActionStart, hActionRec);
+            if (iResult == MessageResult.Cancel)
+            {
+                return ActionResult.UserExit;
+            }
+
+            // Tell the installer to use explicit progress messages.
+            hProgressRec[1] = 1;
+            hProgressRec[2] = 1;
+            hProgressRec[3] = 0;
+            iResult = session.Message(InstallMessage.Progress, hProgressRec);
+            if (iResult == MessageResult.Cancel)
+            {
+                return ActionResult.UserExit;
+            }
+
+            try
+            {
+                CustomActionData data = session.CustomActionData;
+
+                foreach (var datum in data)
+                {
+                    string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Value));
+
+                    using (var task = new PowerShellTask(script, session))
+                    {
+                        task.Execute();
+                    }
+                }
+
+                return ActionResult.Success;
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+                return ActionResult.Failure;
+            }
+        }
+
+        private static ActionResult FilesImmediate(Session session, int elevated, string deferredProperty)
+        {
             Database db = session.Database;
 
-            if (!db.Tables.Contains("PowerShellFiles"))
+            const string tableName = "PowerShellFiles";
+            if (!db.Tables.Contains(tableName))
                 return ActionResult.Success;
 
             try
             {
-                View view = db.OpenView("SELECT `Id`, `File`, `Arguments` FROM `PowerShellFiles`");
+                View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated));
                 view.Execute();
 
                 var doc = new XDocument(new XDeclaration("1.0", "utf-16", "yes"), new XElement("r"));
@@ -36,12 +144,13 @@ namespace PowerShellActions
 
                     session.Log("args '{0}'", args);
 
-                    doc.Root.Add(new XElement("d", new XAttribute("Id", row["Id"]), new XAttribute("file", session.Format(row["File"].ToString())), new XAttribute("args", args)));
+                    doc.Root.Add(new XElement("d", new XAttribute("Id", row["Id"]),
+                        new XAttribute("file", session.Format(row["File"].ToString())), new XAttribute("args", args)));
                 }
 
                 var cad = new CustomActionData { { "xml", doc.ToString() } };
 
-                session["PowerShellFilesDeferred"] = cad.ToString();
+                session[deferredProperty] = cad.ToString();
 
                 // Tell the installer to increase the value of the final total
                 // length of the progress bar by the total number of ticks in
@@ -69,12 +178,8 @@ namespace PowerShellActions
             }
         }
 
-        [CustomAction]
-        public static ActionResult PowerShellFilesDeferred(Session session)
+        private static ActionResult FilesDeferred(Session session, string deferredProperty)
         {
-            session.Log("PowerShellFilesDeferred start");
-
-
             var hActionRec = new Record(3);
             var hProgressRec = new Record(3);
 
@@ -83,7 +188,7 @@ namespace PowerShellActions
             // messages that will inform the user about what the custom
             // action is doing. Tell the installer to use this template and
             // text in progress messages.
-            hActionRec[1] = "PowerShellFilesDeferred";
+            hActionRec[1] = deferredProperty;
             hActionRec[2] = "PowerShell Files";
             hActionRec[3] = "[1] of [2], [3]";
             MessageResult iResult = session.Message(InstallMessage.ActionStart, hActionRec);
@@ -129,8 +234,7 @@ namespace PowerShellActions
             }
         }
 
-        [CustomAction]
-        public static ActionResult PowerShellScriptsImmediate(Session session)
+        private static ActionResult ScriptsImmediate(Session session, int elevated, string deferredProperty)
         {
             Database db = session.Database;
 
@@ -139,7 +243,7 @@ namespace PowerShellActions
 
             try
             {
-                View view = db.OpenView("SELECT `Id`, `Script` FROM `PowerShellScripts`");
+                View view = db.OpenView(string.Format("SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated));
                 view.Execute();
 
                 var data = new CustomActionData();
@@ -149,7 +253,7 @@ namespace PowerShellActions
                     data[row["Id"].ToString()] = row["Script"].ToString();
                 }
 
-                session["PowerShellScriptsDeferred"] = data.ToString();
+                session[deferredProperty] = data.ToString();
 
                 // Tell the installer to increase the value of the final total
                 // length of the progress bar by the total number of ticks in
@@ -177,58 +281,5 @@ namespace PowerShellActions
             }
         }
 
-        // Specify or calculate the number of ticks in an increment to the ProgressBar
-        [CustomAction]
-        public static ActionResult PowerShellScriptsDeferred(Session session)
-        {
-            var hActionRec = new Record(3);
-            var hProgressRec = new Record(3);
-
-            // Installer is executing the installation script. Set up a
-            // record specifying appropriate templates and text for
-            // messages that will inform the user about what the custom
-            // action is doing. Tell the installer to use this template and
-            // text in progress messages.
-            hActionRec[1] = "PowerShellScriptsDeferred";
-            hActionRec[2] = "PowerShell Scripts";
-            hActionRec[3] = "[1] of [2], [3]";
-            MessageResult iResult = session.Message(InstallMessage.ActionStart, hActionRec);
-            if (iResult == MessageResult.Cancel)
-            {
-                return ActionResult.UserExit;
-            }
-
-            // Tell the installer to use explicit progress messages.
-            hProgressRec[1] = 1;
-            hProgressRec[2] = 1;
-            hProgressRec[3] = 0;
-            iResult = session.Message(InstallMessage.Progress, hProgressRec);
-            if (iResult == MessageResult.Cancel)
-            {
-                return ActionResult.UserExit;
-            }
-
-            try
-            {
-                CustomActionData data = session.CustomActionData;
-
-                foreach (var datum in data)
-                {
-                    string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Value));
-
-                    using (var task = new PowerShellTask(script, session))
-                    {
-                        task.Execute();
-                    }
-                }
-
-                return ActionResult.Success;
-            }
-            catch (Exception ex)
-            {
-                session.Log(ex.ToString());
-                return ActionResult.Failure;
-            }
-        }
     }
 }

@@ -16,11 +16,24 @@
                   Execute="deferred"
                   Return="check" />
 
+    <CustomAction Id="PowerShellScriptsElevatedImmediate"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellScriptsElevatedImmediate"
+                  Execute="immediate"
+                  Return="check" />
+
+    <CustomAction Id="PowerShellScriptsElevatedDeferred"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellScriptsElevatedDeferred"
+                  Impersonate="no"
+                  Execute="deferred"
+                  Return="check" />
+
     <CustomAction Id="PowerShellFilesImmediate"
-              BinaryKey="CA_DLL"
-              DllEntry="PowerShellFilesImmediate"
-              Execute="immediate"
-              Return="check" />
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellFilesImmediate"
+                  Execute="immediate"
+                  Return="check" />
 
     <CustomAction Id="PowerShellFilesDeferred"
                   BinaryKey="CA_DLL"
@@ -29,32 +42,37 @@
                   Execute="deferred"
                   Return="check" />
 
+    <CustomAction Id="PowerShellFilesElevatedImmediate"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellFilesElevatedImmediate"
+                  Execute="immediate"
+                  Return="check" />
+    
+    <CustomAction Id="PowerShellFilesElevatedDeferred"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellFilesElevatedDeferred" 
+                  Impersonate="no"
+                  Execute="deferred"
+                  Return="check" />
+
     <InstallExecuteSequence>
-      <Custom Action="PowerShellScriptsImmediate"
-              Before="PowerShellScriptsDeferred">
-        NOT Installed
-      </Custom>
+      <Custom Action="PowerShellScriptsImmediate" Before="PowerShellScriptsDeferred">NOT Installed</Custom>
+      <Custom Action="PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
 
-      <Custom Action="PowerShellScriptsDeferred"
-              After="InstallFiles">
-        NOT Installed
-      </Custom>
+      <Custom Action="PowerShellScriptsElevatedImmediate" Before="PowerShellScriptsElevatedDeferred">NOT Installed</Custom>
+      <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
 
-      <Custom Action="PowerShellFilesImmediate"
-        Before="PowerShellFilesDeferred">
-        NOT Installed
-      </Custom>
-
-      <Custom Action="PowerShellFilesDeferred"
-              After="InstallFiles">
-        NOT Installed
-      </Custom>
-
+      <Custom Action="PowerShellFilesImmediate" Before="PowerShellFilesDeferred">NOT Installed</Custom>
+      <Custom Action="PowerShellFilesDeferred" After="InstallFiles">NOT Installed</Custom>
+      
+      <Custom Action="PowerShellFilesElevatedImmediate" Before="PowerShellFilesElevatedDeferred">NOT Installed</Custom>
+      <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
     </InstallExecuteSequence>
 
     <UI>
       <ProgressText Action="PowerShellFilesDeferred">PowerShell Files</ProgressText>
       <ProgressText Action="PowerShellScriptsDeferred">PowerShell Inline</ProgressText>
+      <ProgressText Action="PowerShellFilesElevatedDeferred">PowerShell Files (elevated)</ProgressText>
     </UI>
   </Fragment>
 </Wix>
