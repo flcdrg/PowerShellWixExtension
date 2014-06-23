@@ -44,6 +44,23 @@
         
         ]]>
     </powershell:Script>
+
+    <powershell:Script Id="Script4">
+      <![CDATA[
+
+        throw "oh dear";
+        
+        ]]>
+    </powershell:Script>
+
+    <powershell:Script Id="Script5">
+      <![CDATA[
+
+        Write-Host "This script should not run because the previous one raised an exception"
+        
+        ]]>
+    </powershell:Script>
+
     
     <UI>
       <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />

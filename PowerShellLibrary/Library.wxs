@@ -72,6 +72,7 @@
     <UI>
       <ProgressText Action="PowerShellFilesDeferred">PowerShell Files</ProgressText>
       <ProgressText Action="PowerShellScriptsDeferred">PowerShell Inline</ProgressText>
+      <ProgressText Action="PowerShellScriptsElevatedDeferred">PowerShell Inline (elevated)</ProgressText>
       <ProgressText Action="PowerShellFilesElevatedDeferred">PowerShell Files (elevated)</ProgressText>
     </UI>
   </Fragment>
