@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -9,6 +10,8 @@ namespace PowerShellActions
 {
     internal class PowerShellTask : IDisposable
     {
+        private readonly Session _session;
+
         /// <summary>
         ///     The context that the Windows PowerShell script will run under.
         /// </summary>
@@ -16,6 +19,7 @@ namespace PowerShellActions
 
         internal PowerShellTask(string script, Session session)
         {
+            _session = session;
             Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session));
 
             _pipeline = runspace.CreatePipeline();
@@ -26,6 +30,7 @@ namespace PowerShellActions
 
         internal PowerShellTask(string file, string arguments, Session session)
         {
+            _session = session;
             RunspaceConfiguration runspaceConfiguration = RunspaceConfiguration.Create();
             Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session), runspaceConfiguration);
 
@@ -53,7 +58,25 @@ namespace PowerShellActions
         /// <returns></returns>
         public bool Execute()
         {
-            _pipeline.Invoke();
+            var results = _pipeline.Invoke();
+
+            if (results.Any())
+                _session.Log("Output");
+
+            foreach (var r in results)
+            {
+                _session.Log(r.BaseObject.ToString());
+            }
+
+            var errors = Errors();
+
+            if (errors != null)
+            {
+                var record = new Record(0);
+                record[0] = errors;
+                _session.Message(InstallMessage.Error, record);
+            }
+
             return !_pipeline.HadErrors;
         }
 
@@ -63,18 +86,19 @@ namespace PowerShellActions
             if (_pipeline.Error.Count > 0)
             {
                 var builder = new StringBuilder();
-                //iterate over Error PipeLine until end
+
+                // iterate over Error PipeLine until end
                 while (!_pipeline.Error.EndOfPipeline)
                 {
-                    //read one PSObject off the pipeline
+                    // read one PSObject off the pipeline
                     var value = _pipeline.Error.Read() as PSObject;
                     if (value != null)
                     {
-                        //get the ErrorRecord
+                        // get the ErrorRecord
                         var r = value.BaseObject as ErrorRecord;
                         if (r != null)
                         {
-                            //build whatever kind of message your want
+                            // build whatever kind of message you want
                             builder.AppendLine(r.InvocationInfo.MyCommand.Name + " : " + r.Exception.Message);
                             builder.AppendLine(r.InvocationInfo.PositionMessage);
                             builder.AppendLine(string.Format("+ CategoryInfo: {0}", r.CategoryInfo));

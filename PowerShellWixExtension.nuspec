@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>PowerShellWixExtension</id>
-        <version>1.5</version>
+        <version>1.6</version>
         <title>Wix Extension for PowerShell</title>
         <summary>Wix Extension that allows running PowerShell scripts</summary>
         <description>An extension for Wix that allows running PowerShell scripts, either from .ps1 files included in the MSI, or by embedding PowerShell script directly</description>
@@ -13,7 +13,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>WiX PowerShell MSI Installer XML</tags>
         <releaseNotes>
-            Ensure MSI execution is aborted if a script returns an error
+            Improve logging of script output and non-terminating errors
         </releaseNotes>
     </metadata>
     <files>

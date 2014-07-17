@@ -5,6 +5,11 @@ namespace PowerShellActions
 {
     public class WixHostRawUserInterface : PSHostRawUserInterface
     {
+        public WixHostRawUserInterface()
+        {
+            BufferSize = new Size(130, 25);
+        }
+
         public override ConsoleColor BackgroundColor { get; set; }
         public override Size BufferSize { get; set; }
         public override Coordinates CursorPosition { get; set; }
