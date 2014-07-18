@@ -72,12 +72,14 @@ namespace PowerShellActions
 
             if (errors != null)
             {
+                _session.Log( "Non-terminating errors" );
+
                 var record = new Record(0);
                 record[0] = errors;
                 _session.Message(InstallMessage.Error, record);
             }
 
-            return !_pipeline.HadErrors;
+            return !_pipeline.HadErrors && _pipeline.Error.Count == 0;
         }
 
         public string Errors()

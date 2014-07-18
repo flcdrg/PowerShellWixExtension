@@ -172,10 +172,14 @@ namespace PowerShellActions
                     using (var task = new PowerShellTask(script, session))
                     {
                         var result = task.Execute();
-                        session.Log("Result {0}", result);
+                        session.Log( "PowerShell non-terminating errors: {0}", !result );
 
-                        if (!result)
+                        if ( !result )
+                        {
+                            session.Log( "Returning Failure" );
+
                             return ActionResult.Failure;
+                        }
                     }
                 }
 
@@ -183,6 +187,7 @@ namespace PowerShellActions
             }
             catch (Exception ex)
             {
+                session.Log( "PowerShell terminating error, returning Failure" );
                 session.Log(ex.ToString());
                 return ActionResult.Failure;
             }
@@ -300,9 +305,12 @@ namespace PowerShellActions
                     using (var task = new PowerShellTask(file, arguments, session))
                     {
                         var result = task.Execute();
-                        session.Log("Result {0}", result);
-                        if (!result)
+                        session.Log("PowerShell non-terminating errors: {0}", !result);
+                        if ( !result )
+                        {
+                            session.Log( "Returning Failure" );
                             return ActionResult.Failure;
+                        }
                     }
                 }
 
@@ -310,7 +318,8 @@ namespace PowerShellActions
             }
             catch (Exception ex)
             {
-                session.Log(ex.ToString());
+                session.Log( "PowerShell terminating error, returning Failure" );
+                session.Log( ex.ToString() );
                 return ActionResult.Failure;
             }
         }
