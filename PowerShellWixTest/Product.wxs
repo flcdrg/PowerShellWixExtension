@@ -41,14 +41,15 @@
     
         Write-Host $wid.Name
         Write-Host $prp.IsInRole($adm)
-        
-        ]]>
+                ]]>
     </powershell:Script>
 
     <powershell:Script Id="Script4">
       <![CDATA[
 
-        throw "oh dear";
+        # throw "oh dear";
+        exit 1
+
         
         ]]>
     </powershell:Script>

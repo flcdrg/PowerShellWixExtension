@@ -8,7 +8,7 @@ using Microsoft.Deployment.WindowsInstaller;
 
 namespace PowerShellActions
 {
-    internal class PowerShellTask : IDisposable
+    internal class PowerShellTask : IDisposable, IExitCode
     {
         private readonly Session _session;
 
@@ -20,7 +20,7 @@ namespace PowerShellActions
         internal PowerShellTask(string script, Session session)
         {
             _session = session;
-            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session));
+            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session, this));
 
             _pipeline = runspace.CreatePipeline();
             _pipeline.Commands.AddScript(script);
@@ -32,7 +32,7 @@ namespace PowerShellActions
         {
             _session = session;
             RunspaceConfiguration runspaceConfiguration = RunspaceConfiguration.Create();
-            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session), runspaceConfiguration);
+            Runspace runspace = RunspaceFactory.CreateRunspace(new WixHost(session, this), runspaceConfiguration);
 
             runspace.Open();
 
@@ -45,6 +45,8 @@ namespace PowerShellActions
             _pipeline.Commands.AddScript(string.Format("& '{0}' {1}", file, arguments));
             _pipeline.Runspace.SessionStateProxy.SetVariable("session", session);
         }
+
+        public int ExitCode { get; set; }
 
         public void Dispose()
         {
@@ -60,6 +62,10 @@ namespace PowerShellActions
         {
             var results = _pipeline.Invoke();
 
+            var record = new Record(0);
+            record[0] = string.Format("Exit code {0}", ExitCode);
+            _session.Message(InstallMessage.Info, record);
+
             if (results.Any())
                 _session.Log("Output");
 
@@ -74,12 +80,11 @@ namespace PowerShellActions
             {
                 _session.Log( "Non-terminating errors" );
 
-                var record = new Record(0);
                 record[0] = errors;
                 _session.Message(InstallMessage.Error, record);
             }
 
-            return !_pipeline.HadErrors && _pipeline.Error.Count == 0;
+            return !_pipeline.HadErrors && errors == null && ExitCode == 0;
         }
 
         public string Errors()

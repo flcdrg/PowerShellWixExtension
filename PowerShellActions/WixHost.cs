@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation.Host;
 using System.Threading;
@@ -10,11 +9,13 @@ namespace PowerShellActions
 {
     internal class WixHost : PSHost
     {
+        private readonly IExitCode _exitCode;
         private readonly Guid _guid;
         private readonly PSHostUserInterface _wixHostUserInterface;
 
-        public WixHost(Session session)
+        public WixHost(Session session, IExitCode exitCode)
         {
+            _exitCode = exitCode;
             _wixHostUserInterface = new WixHostUserInterface(session);
             _guid = Guid.NewGuid();
         }
@@ -87,6 +88,7 @@ namespace PowerShellActions
 
         public override void SetShouldExit(int exitCode)
         {
+            _exitCode.ExitCode = exitCode;
         }
     }
 }
