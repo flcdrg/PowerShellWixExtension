@@ -10,6 +10,17 @@
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
 
+    <InstallExecuteSequence>
+      <Custom Action="PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+    </InstallExecuteSequence>
+
+    
     <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 1" />
     <powershell:File Id="PSFile2" File="[#TestPs1]" Arguments="&quot;Second Argument&quot; 2" Elevated="yes" />
 

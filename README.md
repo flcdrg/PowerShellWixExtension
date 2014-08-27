@@ -16,12 +16,25 @@ Getting Started
     <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
 `
 
-3. To execute a .ps1 file that ships with the project
+3. Add the custom actions to your InstallExecuteSequence
+`
+    <InstallExecuteSequence>
+      <Custom Action="PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesDeferred" After="InstallFiles">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+    </InstallExecuteSequence>
+`
+
+4. To execute a .ps1 file that ships with the project
 `
    <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 2"/>
 `
    
-4. To execute inline script use
+5. To execute inline script use
 
 `
 
