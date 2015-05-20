@@ -93,7 +93,9 @@ namespace PowerShellActions
 
                         // foreach (Record row in view)
                     {
-                        data.Add(row["Id"].ToString(), row["Script"].ToString());
+                        data.Add(row["Id"].ToString(),
+                            session.Format(row["Script"].ToString())
+                            );
                         session.Log("Adding {0} to CustomActionData", row["Id"]);
 
                         row = view.Fetch();

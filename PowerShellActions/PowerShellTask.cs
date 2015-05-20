@@ -84,7 +84,7 @@ namespace PowerShellActions
                 _session.Message(InstallMessage.Error, record);
             }
 
-            return !_pipeline.HadErrors && errors == null && ExitCode == 0;
+            return ((_pipeline.Error == null) || (_pipeline.Error.Count == 0)) && errors == null && ExitCode == 0;
         }
 
         public string Errors()

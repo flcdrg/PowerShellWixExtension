@@ -42,13 +42,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="wix">
-      <HintPath>..\..\..\Program Files (x86)\WiX Toolset v3.8\bin\wix.dll</HintPath>
-    </Reference>
     <ProjectReference Include="..\PowerShellLibrary\PowerShellLibrary.wixproj">
       <Name>PowerShellLibrary</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <Reference Include="wix">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\WiX Toolset v3.9\bin\wix.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PowerShellCompilerExtension.cs" />
@@ -81,7 +81,7 @@
   -->
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb; $(TargetPath)" DestinationFolder="..\Libs" SkipUnchangedFiles="true" />
-    <MakeDir Directories="..\NuGet\tools\lib" Condition="!exists('..\NuGet\tools\lib')"/>
+    <MakeDir Directories="..\NuGet\tools\lib" Condition="!exists('..\NuGet\tools\lib')" />
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb; $(TargetPath)" DestinationFolder="..\NuGet\tools\lib" SkipUnchangedFiles="true" />
   </Target>
 </Project>
