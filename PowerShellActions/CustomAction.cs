@@ -90,8 +90,6 @@ namespace PowerShellActions
                     Record row = view.Fetch();
 
                     while (row != null)
-
-                        // foreach (Record row in view)
                     {
                         data.Add(row["Id"].ToString(),
                             session.Format(row["Script"].ToString())
@@ -170,6 +168,7 @@ namespace PowerShellActions
                 foreach (var datum in data)
                 {
                     string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Value));
+                    session.Log("Executing PowerShell script:\n{0}", script);
 
                     using (var task = new PowerShellTask(script, session))
                     {
