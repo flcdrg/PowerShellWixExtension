@@ -5,7 +5,7 @@ A Wix Extension for running PowerShell scripts
 
 NuGet Package
 -------------
-Ready to add to a Wix project - https://www.nuget.org/packages/PowerShellWixExtension/
+All ready to add to an existing Wix project. Grab the latest version from https://www.nuget.org/packages/PowerShellWixExtension/
 
 Getting Started
 ---------------
@@ -26,12 +26,12 @@ Getting Started
     </InstallExecuteSequence>
     ```
 4. To execute a .ps1 file that ships with the project
+
     ```
    <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 2"/>
     ```
 5. To execute inline script use
     ```
-
     <powershell:Script Id="Script2">
       <![CDATA[
         # Write-Host "Number 2";
