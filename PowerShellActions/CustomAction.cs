@@ -91,9 +91,11 @@ namespace PowerShellActions
 
                     while (row != null)
                     {
-                        data.Add(row["Id"].ToString(),
-                            session.Format(row["Script"].ToString())
-                            );
+                        string script = Encoding.Unicode.GetString(Convert.FromBase64String(row["Script"].ToString()));
+                        script = session.Format(script);
+                        script = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+                        data.Add(row["Id"].ToString(), script);
                         session.Log("Adding {0} to CustomActionData", row["Id"]);
 
                         row = view.Fetch();
