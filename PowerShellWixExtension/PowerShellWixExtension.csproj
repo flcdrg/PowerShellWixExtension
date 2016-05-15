@@ -47,7 +47,7 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <Reference Include="wix">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\WiX Toolset v3.9\bin\wix.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\WiX Toolset v3.10\bin\wix.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
