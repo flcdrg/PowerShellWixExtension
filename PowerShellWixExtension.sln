@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShellWixExtension", "P
 		{598472F5-D044-41F2-A8F0-82976139C499} = {598472F5-D044-41F2-A8F0-82976139C499}
 	EndProjectSection
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PowerShellWixTest", "PowerShellWixTest\PowerShellWixTest.wixproj", "{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShellActions", "PowerShellActions\PowerShellActions.csproj", "{0A83F788-68C1-4533-8732-6B8E3FBC5282}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PowerShellLibrary", "PowerShellLibrary\PowerShellLibrary.wixproj", "{598472F5-D044-41F2-A8F0-82976139C499}"
@@ -23,6 +21,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D7480EA6-0D6B-4010-A15F-460EB85DF682}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PowerShellWixInlineScriptTest", "Tests\PowerShellWixInlineScriptTest\PowerShellWixInlineScriptTest.wixproj", "{BBA07F7F-E4D8-47F7-9A05-4CD6644236C2}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PowerShellWixTest", "Tests\PowerShellWixTest\PowerShellWixTest.wixproj", "{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,16 +44,6 @@ Global
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|x86.ActiveCfg = Release|Any CPU
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|x86.ActiveCfg = Debug|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|x86.Build.0 = Debug|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Any CPU.ActiveCfg = Release|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Mixed Platforms.Build.0 = Release|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|x86.ActiveCfg = Release|x86
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|x86.Build.0 = Release|x86
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -84,12 +74,22 @@ Global
 		{BBA07F7F-E4D8-47F7-9A05-4CD6644236C2}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BBA07F7F-E4D8-47F7-9A05-4CD6644236C2}.Release|x86.ActiveCfg = Release|x86
 		{BBA07F7F-E4D8-47F7-9A05-4CD6644236C2}.Release|x86.Build.0 = Release|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|x86.ActiveCfg = Debug|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Debug|x86.Build.0 = Debug|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Any CPU.ActiveCfg = Release|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|x86.ActiveCfg = Release|x86
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA} = {D7480EA6-0D6B-4010-A15F-460EB85DF682}
 		{BBA07F7F-E4D8-47F7-9A05-4CD6644236C2} = {D7480EA6-0D6B-4010-A15F-460EB85DF682}
+		{0E852B37-0DD2-4FE9-8E20-123C0040F8BA} = {D7480EA6-0D6B-4010-A15F-460EB85DF682}
 	EndGlobalSection
 EndGlobal

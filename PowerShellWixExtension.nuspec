@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>PowerShellWixExtension</id>
-        <version>2.0-beta1</version>
+        <version>2.0.0-beta1</version>
         <title>Wix Extension for PowerShell</title>
         <summary>Wix Extension that allows running PowerShell scripts</summary>
         <description>An extension for Wix that allows running PowerShell scripts, either from .ps1 files included in the MSI, or by embedding PowerShell script directly</description>

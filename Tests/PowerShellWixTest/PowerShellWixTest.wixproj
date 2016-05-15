@@ -25,13 +25,13 @@
     <Compile Include="ProgressDlg.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <WixExtension Include="PowerShellWixExtension">
+      <HintPath>..\..\Libs\PowerShellWixExtension.dll</HintPath>
+      <Name>PowerShellWixExtension</Name>
+    </WixExtension>
     <WixExtension Include="WixUIExtension">
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
-    </WixExtension>
-    <WixExtension Include="PowerShellWixExtension">
-      <HintPath>..\Libs\PowerShellWixExtension.dll</HintPath>
-      <Name>PowerShellWixExtension</Name>
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
