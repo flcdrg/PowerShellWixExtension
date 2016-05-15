@@ -27,9 +27,10 @@
     <powershell:Script Id="Script2" Elevated="no">
       <![CDATA[
 
-        $wid=[System.Security.Principal.WindowsIdentity]::GetCurrent()
+        # Note, for inline scripts square brackets need to be escaped so they don't get interpreted as MSI properties
+        $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
         $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
-        $adm=[System.Security.Principal.WindowsBuiltInRole]::Administrator
+        $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
     
         Write-Host $wid.Name
         Write-Host $prp.IsInRole($adm)
@@ -46,13 +47,13 @@
     <powershell:Script Id="Script3" Elevated="yes">
       <![CDATA[
         
-        $wid=[System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
         $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
-        $adm=[System.Security.Principal.WindowsBuiltInRole]::Administrator
+        $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
     
         Write-Host $wid.Name
         Write-Host $prp.IsInRole($adm)
-                ]]>
+        ]]>
     </powershell:Script>
 
     <powershell:Script Id="Script4">

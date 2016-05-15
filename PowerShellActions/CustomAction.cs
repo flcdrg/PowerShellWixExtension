@@ -295,6 +295,12 @@ namespace PowerShellActions
 
             try
             {
+                if (!session.CustomActionData.ContainsKey("xml"))
+                {
+                    session.Log("Skipping as no CustomActionData key 'xml'");
+                    return ActionResult.NotExecuted;    
+                }
+
                 string content = session.CustomActionData["xml"];
 
                 XDocument doc = XDocument.Parse(content);

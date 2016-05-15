@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>PowerShellWixExtension</id>
-        <version>1.9</version>
+        <version>2.0-beta1</version>
         <title>Wix Extension for PowerShell</title>
         <summary>Wix Extension that allows running PowerShell scripts</summary>
         <description>An extension for Wix that allows running PowerShell scripts, either from .ps1 files included in the MSI, or by embedding PowerShell script directly</description>
@@ -11,9 +11,10 @@
         <projectUrl>https://github.com/flcdrg/PowerShellWixExtension/</projectUrl>
         <licenseUrl>https://github.com/flcdrg/PowerShellWixExtension/blob/master/LICENSE.txt</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <tags>WiX PowerShell MSI Installer XML</tags>
+        <tags>WiX PowerShell MSI Installer WixToolset XML</tags>
         <releaseNotes>
-            End-user is now repsonsible for adding deferred custom actions to InstallExecuteSequence
+            Compiled against Wix 3.10
+            Fix for issue #5 - KeyNotFoundException thrown when running an inline Script without a File element
         </releaseNotes>
     </metadata>
     <files>
