@@ -56,6 +56,7 @@
                   Return="check" />
 
     <InstallExecuteSequence>
+      <!-- These are the 'immediate' actions that prep the data for the 'deferred' actions-->
       <Custom Action="PowerShellScriptsImmediate" Before="PowerShellScriptsDeferred">NOT Installed</Custom>
 
       <Custom Action="PowerShellScriptsElevatedImmediate" Before="PowerShellScriptsElevatedDeferred">NOT Installed</Custom>
@@ -63,6 +64,16 @@
       <Custom Action="PowerShellFilesImmediate" Before="PowerShellFilesDeferred">NOT Installed</Custom>
       
       <Custom Action="PowerShellFilesElevatedImmediate" Before="PowerShellFilesElevatedDeferred">NOT Installed</Custom>
+
+      <!-- 'Deferred' actions -->
+      <Custom Action="PowerShellScriptsDeferred" After="InstallFiles" Overridable="yes">NOT Installed</Custom>
+
+      <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles" Overridable="yes">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesDeferred" After="InstallFiles" Overridable="yes">NOT Installed</Custom>
+
+      <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles" Overridable="yes">NOT Installed</Custom>
+
     </InstallExecuteSequence>
 
     <UI>

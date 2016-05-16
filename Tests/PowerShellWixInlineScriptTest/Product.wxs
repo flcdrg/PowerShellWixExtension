@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
-    <Product Id="*" Name="PowerShellWixInlineScriptTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="dec23bb5-d23b-4b27-9006-252ac8142ba1">
-        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Product Id="*" Name="PowerShellWixInlineScriptTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="DEC23BB5-D23B-4B27-9006-252AC8142BA1">
+      <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
-        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-        <MediaTemplate />
+      <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+      <MediaTemplate EmbedCab="yes" />
 
-        <Feature Id="ProductFeature" Title="PowerShellWixInlineScriptTest" Level="1">
-            <ComponentGroupRef Id="ProductComponents" />
-        </Feature>
+      <Feature Id="ProductFeature" Title="PowerShellWixInlineScriptTest" Level="1">
+          <ComponentGroupRef Id="ProductComponents" />
+      </Feature>
 
       <InstallExecuteSequence>
-        <Custom Action="PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
-
-        <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
-
-        <Custom Action="PowerShellFilesDeferred" After="InstallFiles">NOT Installed</Custom>
-
-        <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+        <!-- Override default action sequence -->
+        <Custom Action="PowerShellScriptsDeferred" After="RegisterUser">NOT Installed</Custom>
       </InstallExecuteSequence>
-
+      
       <powershell:Script Id="Script2" Elevated="no">
-        <![CDATA[
+          <![CDATA[
 
-        Write-Host "This is an inline script, running non-elevated"
+          Write-Host "This is an inline script, running non-elevated"
         
-        # Note, for inline scripts square brackets need to be escaped so they don't get interpreted as MSI properties
-        $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
-        $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
-        $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
+          # Note, for inline scripts square brackets need to be escaped so they don't get interpreted as MSI properties
+          $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
+          $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
+          $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
     
-        Write-Host $wid.Name
-        Write-Host $prp.IsInRole($adm)
+          Write-Host $wid.Name
+          Write-Host $prp.IsInRole($adm)
 
-        for ($i = 1; $i -le 100; $i += 10) 
-        { 
-          Write-Progress -Activity "Activity" -Status "Status $i% complete" -CurrentOperation "Operation $i" -PercentComplete $i
-          Start-Sleep -Milliseconds 5 
-        }
+          for ($i = 1; $i -le 100; $i += 2) 
+          { 
+            Write-Progress -Activity "Activity" -Status "Status $i% complete" -CurrentOperation "Operation $i" -PercentComplete $i
+            Start-Sleep -Milliseconds 50 
+          }
         
-        ]]>
-      </powershell:Script>
+          ]]>
+        </powershell:Script>
 
-      <UIRef Id="WixUI_Minimal" />
+        <powershell:Script Id="Script4">
+          <![CDATA[
+
+          # throw "oh dear";
+          exit 1
+
+        
+          ]]>
+        </powershell:Script>
+
+        <UIRef Id="WixUI_Minimal" />
 
     </Product>
 
-
-  <Fragment>
+    <Fragment>
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLFOLDER" Name="PowerShellWixInlineScriptTest">
-                  
                 </Directory>
             </Directory>
         </Directory>
@@ -59,7 +62,6 @@
 
     <Fragment>
         <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-            <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
             <Component Id="ProductComponent">
               <File Source="TextFile1.txt" KeyPath="yes" />
              </Component> 

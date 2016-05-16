@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
-  <Product Id="*" Name="PowerShellWixTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="c61298af-d8c9-4179-903f-f42fa69b59ad">
+  <Product Id="*" Name="PowerShellWixTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="C61298AF-D8C9-4179-903F-F42FA69B59AD">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -10,8 +10,9 @@
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
 
+<!--
     <InstallExecuteSequence>
-      <Custom Action="PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="PowerShellScriptsDeferred" After="RegisterUser">NOT Installed</Custom>
 
       <Custom Action="PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
 
@@ -19,6 +20,7 @@
 
       <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
     </InstallExecuteSequence>
+-->
 
     
     <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 1" />
@@ -35,10 +37,10 @@
         Write-Host $wid.Name
         Write-Host $prp.IsInRole($adm)
 
-        for ($i = 1; $i -le 100; $i += 10) 
+        for ($i = 1; $i -le 100; $i += 2) 
         { 
           Write-Progress -Activity "Activity" -Status "Status $i% complete" -CurrentOperation "Operation $i" -PercentComplete $i
-          Start-Sleep -Milliseconds 5 
+          Start-Sleep -Milliseconds 200
         }
         
         ]]>
