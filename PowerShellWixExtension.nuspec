@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>PowerShellWixExtension</id>
@@ -15,7 +15,7 @@
         <releaseNotes>
 * Compiled against Wix 3.10
 * Fix for issue #5 - KeyNotFoundException thrown when running an inline Script without a File element
-* No need to specify <Custom Action.. /> elements in InstallExecuteSequence, unless you want to override the default sequencing.        
+* No need to specify &lt;Custom Action.. /&gt; elements in InstallExecuteSequence, unless you want to override the default sequencing.        
 		</releaseNotes>
     </metadata>
     <files>
