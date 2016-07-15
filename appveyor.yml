@@ -1,0 +1,21 @@
+os: Visual Studio 2015
+install:
+  - choco install gitversion.portable -pre -y
+  - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+
+assembly_info:
+  patch: false
+
+configuration:
+  - Release
+before_build:
+  - nuget restore
+#  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+
+build:
+  project: PowerShellWixExtension.sln
+
+after_build:
+  - cmd: ECHO nuget pack PowerShellWixExtension.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
+  - cmd: nuget pack PowerShellWixExtension.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
+  - cmd: appveyor PushArtifact "PowerShellWixExtension.%GitVersion_NuGetVersion%.nupkg"
