@@ -1,3 +1,4 @@
-branches: {}
-ignore:
-  sha: []
+branches:
+  master:
+    mode: ContinuousDelivery
+    tag: beta
