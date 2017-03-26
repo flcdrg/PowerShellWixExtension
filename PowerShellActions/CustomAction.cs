@@ -366,7 +366,7 @@ namespace PowerShellActions
                         {
                             bool result = task.Execute();
                             session.Log("PowerShell non-terminating errors: {0}", !result);
-                            if (!result)
+                        if ( !result )
                             {
                                 if (!IgnoreErrors.Equals("0"))
                                 {
@@ -374,7 +374,7 @@ namespace PowerShellActions
                                 }
                                 else
                                 {
-                                    session.Log("Returning Failure");
+                            session.Log( "Returning Failure" );
                                     return ActionResult.Failure;
                                 }
                             }
