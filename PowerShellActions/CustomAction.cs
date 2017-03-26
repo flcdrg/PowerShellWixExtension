@@ -81,7 +81,7 @@ namespace PowerShellActions
             try
             {
                 CustomActionData data;
-                using ( View view = db.OpenView( string.Format( "SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated ) ) )
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
                 {
                     view.Execute();
 
@@ -108,11 +108,11 @@ namespace PowerShellActions
                 // length of the progress bar by the total number of ticks in
                 // the custom action.
                 MessageResult iResult;
-                using ( var hProgressRec = new Record( 2 ) )
+                using (var hProgressRec = new Record(2))
                 {
                     hProgressRec[1] = 3;
                     hProgressRec[2] = TotalTicks;
-                    iResult = session.Message( InstallMessage.Progress, hProgressRec );
+                    iResult = session.Message(InstallMessage.Progress, hProgressRec);
                 }
 
                 if (iResult == MessageResult.Cancel)
@@ -136,12 +136,12 @@ namespace PowerShellActions
         private static ActionResult ScriptsDeferred(Session session, string deferredProperty)
         {
             MessageResult iResult;
-            using ( var hActionRec = new Record( 3 ) )
+            using (var hActionRec = new Record(3))
             {
                 hActionRec[1] = deferredProperty;
                 hActionRec[2] = "PowerShell Scripts";
                 hActionRec[3] = "[1] of [2], [3]";
-                iResult = session.Message( InstallMessage.ActionStart, hActionRec );
+                iResult = session.Message(InstallMessage.ActionStart, hActionRec);
             }
 
             if (iResult == MessageResult.Cancel)
@@ -150,7 +150,7 @@ namespace PowerShellActions
             }
 
             // Tell the installer to use explicit progress messages.
-            using ( var hProgressRec = new Record( 3 ) )
+            using (var hProgressRec = new Record(3))
             {
                 hProgressRec[1] = 1;
                 hProgressRec[2] = 1;
@@ -175,11 +175,11 @@ namespace PowerShellActions
                     using (var task = new PowerShellTask(script, session))
                     {
                         var result = task.Execute();
-                        session.Log( "PowerShell non-terminating errors: {0}", !result );
+                        session.Log("PowerShell non-terminating errors: {0}", !result);
 
-                        if ( !result )
+                        if (!result)
                         {
-                            session.Log( "Returning Failure" );
+                            session.Log("Returning Failure");
 
                             return ActionResult.Failure;
                         }
@@ -190,7 +190,7 @@ namespace PowerShellActions
             }
             catch (Exception ex)
             {
-                session.Log( "PowerShell terminating error, returning Failure" );
+                session.Log("PowerShell terminating error, returning Failure");
                 session.Log(ex.ToString());
                 return ActionResult.Failure;
             }
@@ -207,11 +207,11 @@ namespace PowerShellActions
             try
             {
                 XDocument doc;
-                using ( View view = db.OpenView( string.Format( "SELECT `Id`, `File`, `Arguments` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated ) ) )
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
                 {
                     view.Execute();
 
-                    doc = new XDocument( new XDeclaration( "1.0", "utf-16", "yes" ), new XElement( "r" ) );
+                    doc = new XDocument(new XDeclaration("1.0", "utf-16", "yes"), new XElement("r"));
 
                     foreach (Record row in view)
                     {
@@ -232,11 +232,11 @@ namespace PowerShellActions
                 // length of the progress bar by the total number of ticks in
                 // the custom action.
                 MessageResult iResult;
-                using ( var hProgressRec = new Record( 2 ) )
+                using (var hProgressRec = new Record(2))
                 {
                     hProgressRec[1] = 3;
                     hProgressRec[2] = TotalTicks;
-                    iResult = session.Message( InstallMessage.Progress, hProgressRec );
+                    iResult = session.Message(InstallMessage.Progress, hProgressRec);
                 }
 
                 if (iResult == MessageResult.Cancel)
@@ -266,12 +266,12 @@ namespace PowerShellActions
             // action is doing. Tell the installer to use this template and
             // text in progress messages.
             MessageResult iResult;
-            using ( var hActionRec = new Record( 3 ) )
+            using (var hActionRec = new Record(3))
             {
                 hActionRec[1] = deferredProperty;
                 hActionRec[2] = "PowerShell Files";
                 hActionRec[3] = "[1] of [2], [3]";
-                iResult = session.Message( InstallMessage.ActionStart, hActionRec );
+                iResult = session.Message(InstallMessage.ActionStart, hActionRec);
             }
 
             if (iResult == MessageResult.Cancel)
@@ -280,7 +280,7 @@ namespace PowerShellActions
             }
 
             // Tell the installer to use explicit progress messages.
-            using ( var hProgressRec = new Record( 3 ) )
+            using (var hProgressRec = new Record(3))
             {
                 hProgressRec[1] = 1;
                 hProgressRec[2] = 1;
@@ -298,7 +298,7 @@ namespace PowerShellActions
                 if (!session.CustomActionData.ContainsKey("xml"))
                 {
                     session.Log("Skipping as no CustomActionData key 'xml'");
-                    return ActionResult.NotExecuted;    
+                    return ActionResult.NotExecuted;
                 }
 
                 string content = session.CustomActionData["xml"];
@@ -313,11 +313,11 @@ namespace PowerShellActions
 
                     using (var task = new PowerShellTask(file, arguments, session))
                     {
-                        var result = task.Execute();
+                        bool result = task.Execute();
                         session.Log("PowerShell non-terminating errors: {0}", !result);
-                        if ( !result )
+                        if (!result)
                         {
-                            session.Log( "Returning Failure" );
+                            session.Log("Returning Failure");
                             return ActionResult.Failure;
                         }
                     }
@@ -327,8 +327,8 @@ namespace PowerShellActions
             }
             catch (Exception ex)
             {
-                session.Log( "PowerShell terminating error, returning Failure" );
-                session.Log( ex.ToString() );
+                session.Log("PowerShell terminating error, returning Failure");
+                session.Log(ex.ToString());
                 return ActionResult.Failure;
             }
         }
