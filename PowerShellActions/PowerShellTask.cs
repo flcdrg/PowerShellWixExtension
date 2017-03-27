@@ -62,36 +62,42 @@ namespace PowerShellActions
         {
             var results = _pipeline.Invoke();
 
-            var record = new Record(0);
-            record[0] = string.Format("Exit code {0}", ExitCode);
-            _session.Message(InstallMessage.Info, record);
-
-            if (results.Any())
-                _session.Log("Output");
-
-            foreach (var r in results)
+            using (var record = new Record(0))
             {
-                _session.Log(r.BaseObject.ToString());
+                record[0] = string.Format("Exit code {0}", ExitCode);
+                _session.Message(InstallMessage.Info, record);
+
+                if (results?.Any() ?? false)
+                {
+                    _session.Log("Output");
+
+                    foreach (var r in results)
+                    {
+                        if (r?.BaseObject != null)
+                        {
+                            _session.Log("\t" + r?.BaseObject?.ToString() ?? "");
+                        }
+                    }
+                }
+
+                var errors = Errors();
+                if (errors != null)
+                {
+                    _session.Log("Non-terminating errors");
+
+                    record[0] = errors;
+                    _session.Message(InstallMessage.Error, record);
+                }
+
+                // Using .Error instead of .HadErrors to support any PS version.
+                return (((_pipeline?.Error?.Count ?? 0) == 0) && (errors == null) && (ExitCode == 0));
             }
-
-            var errors = Errors();
-
-            if (errors != null)
-            {
-                _session.Log( "Non-terminating errors" );
-
-                record[0] = errors;
-                _session.Message(InstallMessage.Error, record);
-            }
-
-            // Using .Error instead of .HadErrors to support any PS version.
-            return ((_pipeline.Error == null) || (_pipeline.Error.Count == 0)) && errors == null && ExitCode == 0;
         }
 
         public string Errors()
         {
             // check for errors (non-terminating)
-            if (_pipeline.Error.Count > 0)
+            if ((_pipeline?.Error?.Count ?? 0) > 0)
             {
                 var builder = new StringBuilder();
 
@@ -107,11 +113,11 @@ namespace PowerShellActions
                         if (r != null)
                         {
                             // build whatever kind of message you want
-                            builder.AppendLine(r.InvocationInfo.MyCommand.Name + " : " + r.Exception.Message);
-                            builder.AppendLine(r.InvocationInfo.PositionMessage);
+                            builder.AppendLine(r.InvocationInfo?.MyCommand?.Name ?? "" + " : " + r.Exception.Message);
+                            builder.AppendLine(r.InvocationInfo?.PositionMessage ?? "");
                             builder.AppendLine(string.Format("+ CategoryInfo: {0}", r.CategoryInfo));
                             builder.AppendLine(
-                            string.Format("+ FullyQualifiedErrorId: {0}", r.FullyQualifiedErrorId));
+                            string.Format("+ FullyQualifiedErrorId: {0}", r.FullyQualifiedErrorId ?? ""));
                         }
                     }
                 }
