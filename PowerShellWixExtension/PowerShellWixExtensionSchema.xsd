@@ -88,6 +88,12 @@
         </xs:annotation>
       </xs:attribute>
 
+      <xs:attribute name="IgnoreErrors" use="optional" default="no" type="wix:YesNoType">
+        <xs:annotation>
+          <xs:documentation>Set to true to ignore PowerShell errors</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+
     </xs:complexType>
   </xs:element>
 </xs:schema>
