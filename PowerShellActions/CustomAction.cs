@@ -207,7 +207,7 @@ namespace PowerShellActions
             try
             {
                 XDocument doc;
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
                 {
                     view.Execute();
 
@@ -216,11 +216,12 @@ namespace PowerShellActions
                     foreach (Record row in view)
                     {
                         var args = session.Format(row["Arguments"].ToString());
+                        var IgnoreErrors = session.Format(row["IgnoreErrors"].ToString());
 
                         session.Log("args '{0}'", args);
 
                         doc.Root.Add(new XElement("d", new XAttribute("Id", row["Id"]),
-                            new XAttribute("file", session.Format(row["File"].ToString())), new XAttribute("args", args)));
+                            new XAttribute("file", session.Format(row["File"].ToString())), new XAttribute("args", args), new XAttribute("IgnoreErrors", IgnoreErrors)));
                     }
                 }
 
@@ -310,15 +311,40 @@ namespace PowerShellActions
                     string file = row.Attribute("file").Value;
 
                     string arguments = row.Attribute("args").Value;
+                    string IgnoreErrors = row.Attribute("IgnoreErrors").Value;
 
                     using (var task = new PowerShellTask(file, arguments, session))
                     {
-                        bool result = task.Execute();
-                        session.Log("PowerShell non-terminating errors: {0}", !result);
-                        if (!result)
+                        try
                         {
-                            session.Log("Returning Failure");
-                            return ActionResult.Failure;
+                            bool result = task.Execute();
+                            session.Log("PowerShell non-terminating errors: {0}", !result);
+                            if (!result)
+                            {
+                                if (!IgnoreErrors.Equals("0"))
+                                {
+                                    session.Log("Ignoring failure due to 'IgnoreErrors' marking");
+                                }
+                                else
+                                {
+                                    session.Log("Returning Failure");
+                                    return ActionResult.Failure;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (!IgnoreErrors.Equals("0"))
+                            {
+                                session.Log("Ignoring PowerShell error due to 'IgnoreErrors' marking");
+                                session.Log(ex.ToString());
+                            }
+                            else
+                            {
+                                session.Log("PowerShell terminating error, returning Failure");
+                                session.Log(ex.ToString());
+                                return ActionResult.Failure;
+                            }
                         }
                     }
                 }
