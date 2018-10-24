@@ -92,7 +92,7 @@ namespace PowerShellActions
             try
             {
                 List<ScriptActionData> scripts = new List<ScriptActionData>();
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0} ORDER BY `Order`", elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
                 {
                     view.Execute();
 
