@@ -28,6 +28,8 @@
       nullable="no"
       description="Run as elevated" />
 
+    <columnDefinition name="IgnoreErrors" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="When non-zero, PowerShell errors are ignored." />
+
   </tableDefinition>
 
   <tableDefinition name="PowerShellFiles" createSymbols="yes">
