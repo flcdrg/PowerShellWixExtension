@@ -1,4 +1,5 @@
-branches:
-  master:
-    mode: ContinuousDelivery
-    tag: beta
+assembly-versioning-scheme: MajorMinorPatchTag
+mode: ContinuousDelivery
+branches: {}
+ignore:
+  sha: []

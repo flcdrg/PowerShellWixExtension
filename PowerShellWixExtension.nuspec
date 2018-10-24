@@ -13,9 +13,8 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>WiX PowerShell MSI Installer WixToolset XML</tags>
         <releaseNotes>
-* Compiled against Wix 3.10
-* Fix for issue #5 - KeyNotFoundException thrown when running an inline Script without a File element
-* No need to specify &lt;Custom Action.. /&gt; elements in InstallExecuteSequence, unless you want to override the default sequencing.        
+* Support ignoring PS failures (from @nirbar)
+* Handle null results (from @nirbar)
         </releaseNotes>
     </metadata>
     <files>

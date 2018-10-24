@@ -5,7 +5,7 @@ A Wix Extension for running PowerShell scripts
 
 NuGet Package
 -------------
-[![NuGet](https://img.shields.io/nuget/v/PowerShellWixExtension.svg?maxAge=2592)](https://www.nuget.org/packages/PowerShellWixExtension/)
+[![NuGet](https://img.shields.io/nuget/v/PowerShellWixExtension.svg?maxAge=2592)](https://www.nuget.org/packages/PowerShellWixExtension/) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/flcdrg/PowerShellWixExtension?style=plastic)](https://ci.appveyor.com/project/DavidGardiner/powershellwixextension)
 
 All ready to add to an existing Wix project. Grab the latest version from https://www.nuget.org/packages/PowerShellWixExtension/
 
