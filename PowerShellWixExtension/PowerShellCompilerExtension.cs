@@ -128,6 +128,7 @@ namespace PowerShellWixExtension
             string superElementId = null;
             string scriptData = null;
             var elevated = YesNoType.No;
+            YesNoType ignoreErrors = YesNoType.No;
 
             foreach (XmlAttribute attribute in node.Attributes)
             {
@@ -141,6 +142,9 @@ namespace PowerShellWixExtension
                             break;
                         case "Elevated":
                             elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            break;
+                        case "IgnoreErrors":
+                            ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
 
                         default:
@@ -181,6 +185,7 @@ namespace PowerShellWixExtension
                 superElementRow[0] = superElementId;
                 superElementRow[1] = scriptData;
                 superElementRow[2] = elevated == YesNoType.Yes ? 1 : 0;
+                superElementRow[3] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");

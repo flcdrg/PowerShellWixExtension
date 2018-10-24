@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using Microsoft.Deployment.WindowsInstaller;
 
 using View = Microsoft.Deployment.WindowsInstaller.View;
+using System.Collections.Generic;
+using System.IO;
 
 namespace PowerShellActions
 {
@@ -71,6 +74,14 @@ namespace PowerShellActions
             return ScriptsDeferred(session, PowerShellScriptsElevatedDeferredProperty);
         }
 
+        [Serializable]
+        public class ScriptActionData
+        {
+            public string Id { get; set; }
+            public string Script { get; set; }
+            public bool IgnoreErrors { get; set; }
+        }
+
         private static ActionResult ScriptsImmediate(Session session, int elevated, string deferredProperty)
         {
             Database db = session.Database;
@@ -80,29 +91,36 @@ namespace PowerShellActions
 
             try
             {
-                CustomActionData data;
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
+                List<ScriptActionData> scripts = new List<ScriptActionData>();
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
                 {
                     view.Execute();
 
-                    data = new CustomActionData();
-
-                    Record row = view.Fetch();
-
-                    while (row != null)
+                    Record row;
+                    while ((row = view.Fetch()) != null)
                     {
                         string script = Encoding.Unicode.GetString(Convert.FromBase64String(row["Script"].ToString()));
                         script = session.Format(script);
                         script = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
 
-                        data.Add(row["Id"].ToString(), script);
-                        session.Log("Adding {0} to CustomActionData", row["Id"]);
+                        ScriptActionData data = new ScriptActionData()
+                        {
+                            Id = row["Id"].ToString(),
+                            Script = script,
+                            IgnoreErrors = row["IgnoreErrors"].ToString() == "1"
+                        };
 
-                        row = view.Fetch();
+                        scripts.Add(data);
+                        session.Log("Adding {0} to CustomActionData", data.Id);
                     }
                 }
 
-                session[deferredProperty] = data.ToString();
+                XmlSerializer srlz = new XmlSerializer(scripts.GetType());
+                using (StringWriter sw = new StringWriter())
+                {
+                    srlz.Serialize(sw, scripts);
+                    session[deferredProperty] = sw.ToString();
+                }
 
                 // Tell the installer to increase the value of the final total
                 // length of the progress bar by the total number of ticks in
@@ -165,22 +183,51 @@ namespace PowerShellActions
 
             try
             {
-                CustomActionData data = session.CustomActionData;
-
-                foreach (var datum in data)
+                List<ScriptActionData> scripts = new List<ScriptActionData>();
+                string cad = session["CustomActionData"];
+                XmlSerializer srlz = new XmlSerializer(scripts.GetType());
+                if (string.IsNullOrWhiteSpace(cad))
                 {
-                    string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Value));
+                    session.Log("Nothing to do");
+                    return ActionResult.Success;
+                }
+
+                using (StringReader sr = new StringReader(cad))
+                {
+                    IEnumerable<ScriptActionData> tempScripts = srlz.Deserialize(sr) as IEnumerable<ScriptActionData>;
+                    if (tempScripts != null)
+                    {
+                        scripts.AddRange(tempScripts);
+                    }
+                }
+
+                foreach (ScriptActionData datum in scripts)
+                {
+                    string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Script));
                     session.Log("Executing PowerShell script:\n{0}", script);
 
                     using (var task = new PowerShellTask(script, session))
                     {
-                        var result = task.Execute();
-                        session.Log("PowerShell non-terminating errors: {0}", !result);
-
+                        bool result = false;
+                        try
+                        {
+                            result = task.Execute();
+                            session.Log("PowerShell terminating errors: {0}", result);
+                        }
+                        catch (Exception ex)
+                        {
+                            result = false;
+                            session.Log(ex.ToString());
+                        }
                         if (!result)
                         {
-                            session.Log("Returning Failure");
+                            if (datum.IgnoreErrors)
+                            {
+                                session.Log("Script execution failed. Ignoring error");
+                                continue;
+                            }
 
+                            session.Log("Returning Failure");
                             return ActionResult.Failure;
                         }
                     }
