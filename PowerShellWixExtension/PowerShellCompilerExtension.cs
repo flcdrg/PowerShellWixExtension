@@ -61,6 +61,7 @@ namespace PowerShellWixExtension
             string arguments = null;
             var elevated = YesNoType.No;
             YesNoType ignoreErrors = YesNoType.No;
+            int order = 1000000000 + sourceLineNumber[0].LineNumber;
 
             foreach (XmlAttribute attribute in node.Attributes)
             {
@@ -83,6 +84,9 @@ namespace PowerShellWixExtension
                             break;
                         case "IgnoreErrors":
                             ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            break;
+                        case "Order":
+                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
                         default:
                             Core.UnexpectedAttribute(sourceLineNumber, attribute);
@@ -116,6 +120,7 @@ namespace PowerShellWixExtension
                 superElementRow[2] = arguments;
                 superElementRow[3] = elevated == YesNoType.Yes ? 1 : 0;
                 superElementRow[4] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
+                superElementRow[5] = order;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
@@ -129,6 +134,7 @@ namespace PowerShellWixExtension
             string scriptData = null;
             var elevated = YesNoType.No;
             YesNoType ignoreErrors = YesNoType.No;
+            int order = 1000000000 + sourceLineNumber[0].LineNumber;
 
             foreach (XmlAttribute attribute in node.Attributes)
             {
@@ -145,6 +151,9 @@ namespace PowerShellWixExtension
                             break;
                         case "IgnoreErrors":
                             ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            break;
+                        case "Order":
+                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
 
                         default:
@@ -186,6 +195,7 @@ namespace PowerShellWixExtension
                 superElementRow[1] = scriptData;
                 superElementRow[2] = elevated == YesNoType.Yes ? 1 : 0;
                 superElementRow[3] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
+                superElementRow[4] = order;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");
