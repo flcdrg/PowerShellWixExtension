@@ -92,7 +92,7 @@ namespace PowerShellActions
             try
             {
                 List<ScriptActionData> scripts = new List<ScriptActionData>();
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
                 {
                     view.Execute();
 
@@ -254,7 +254,7 @@ namespace PowerShellActions
             try
             {
                 XDocument doc;
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
                 {
                     view.Execute();
 

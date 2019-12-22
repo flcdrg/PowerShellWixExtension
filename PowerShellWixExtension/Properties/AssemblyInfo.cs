@@ -22,4 +22,6 @@ using Microsoft.Tools.WindowsInstallerXml;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7abfedd7-d0f1-489a-a1f4-fb5e3e0bd038")]
 
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
 [assembly: AssemblyDefaultWixExtension(typeof(PowerShellWixExtension.PowerShellWixExtension))]
