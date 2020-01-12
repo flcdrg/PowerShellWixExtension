@@ -59,6 +59,7 @@ namespace PowerShellWixExtension
             string superElementId = null;
             string file = null;
             string arguments = null;
+            string condition = null;
             var elevated = YesNoType.No;
             YesNoType ignoreErrors = YesNoType.No;
             int order = 1000000000 + sourceLineNumber[0].LineNumber;
@@ -87,6 +88,9 @@ namespace PowerShellWixExtension
                             break;
                         case "Order":
                             order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            break;
+                        case "Condition":
+                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         default:
                             Core.UnexpectedAttribute(sourceLineNumber, attribute);
@@ -121,6 +125,7 @@ namespace PowerShellWixExtension
                 superElementRow[3] = elevated == YesNoType.Yes ? 1 : 0;
                 superElementRow[4] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
                 superElementRow[5] = order;
+                superElementRow[6] = condition;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
@@ -132,6 +137,7 @@ namespace PowerShellWixExtension
 
             string superElementId = null;
             string scriptData = null;
+            string condition = null;
             var elevated = YesNoType.No;
             YesNoType ignoreErrors = YesNoType.No;
             int order = 1000000000 + sourceLineNumber[0].LineNumber;
@@ -154,6 +160,9 @@ namespace PowerShellWixExtension
                             break;
                         case "Order":
                             order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            break;
+                        case "Condition":
+                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
                             break;
 
                         default:
@@ -196,6 +205,7 @@ namespace PowerShellWixExtension
                 superElementRow[2] = elevated == YesNoType.Yes ? 1 : 0;
                 superElementRow[3] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
                 superElementRow[4] = order;
+                superElementRow[5] = condition;
             }
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");

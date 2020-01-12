@@ -30,6 +30,7 @@
 
     <columnDefinition name="IgnoreErrors" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="When non-zero, PowerShell errors are ignored." />
     <columnDefinition name="Order" type="number" category="integer" length="4" minValue="0" maxValue="2000000000" nullable="no" description="Order of execution." />
+    <columnDefinition name="Condition" type="string" length="0" modularize="property" nullable="yes" category="condition" />
 
   </tableDefinition>
 
@@ -75,6 +76,7 @@
   description="When non-zero, PowerShell errors are ignored." />
 
     <columnDefinition name="Order" type="number" category="integer" length="4" minValue="0" maxValue="2000000000" nullable="no" description="Order of execution." />
+    <columnDefinition name="Condition" type="string" length="0" modularize="property" nullable="yes" category="condition" />
   </tableDefinition>
 
 </tableDefinitions>

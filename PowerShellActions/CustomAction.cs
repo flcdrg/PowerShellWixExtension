@@ -92,13 +92,20 @@ namespace PowerShellActions
             try
             {
                 List<ScriptActionData> scripts = new List<ScriptActionData>();
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0}", elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0} ORDER BY `Order`", elevated)))
                 {
                     view.Execute();
 
                     Record row;
                     while ((row = view.Fetch()) != null)
                     {
+                        string condition = row["Condition"]?.ToString();
+                        if (!string.IsNullOrEmpty(condition) && !session.EvaluateCondition(condition))
+                        {
+                            session.Log($"Condition evaluated to false. Skip PS script {row["Id"]?.ToString()}");
+                            continue;
+                        }
+
                         string script = Encoding.Unicode.GetString(Convert.FromBase64String(row["Script"].ToString()));
                         script = session.Format(script);
                         script = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
@@ -204,7 +211,7 @@ namespace PowerShellActions
                 foreach (ScriptActionData datum in scripts)
                 {
                     string script = Encoding.Unicode.GetString(Convert.FromBase64String(datum.Script));
-                    session.Log("Executing PowerShell script:\n{0}", script);
+                    session.Log($"Executing PowerShell script {datum.Id}:\n{script}");
 
                     using (var task = new PowerShellTask(script, session))
                     {
@@ -254,7 +261,7 @@ namespace PowerShellActions
             try
             {
                 XDocument doc;
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors` FROM `{0}` WHERE `Elevated` = {1}", tableName, elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors` FROM `{0}` WHERE `Elevated` = {1} ORDER BY `Order`", tableName, elevated)))
                 {
                     view.Execute();
 
@@ -262,6 +269,13 @@ namespace PowerShellActions
 
                     foreach (Record row in view)
                     {
+                        string condition = row["Condition"]?.ToString();
+                        if (!string.IsNullOrEmpty(condition) && !session.EvaluateCondition(condition))
+                        {
+                            session.Log($"Condition evaluated to false. Skip PS file {row["Id"]?.ToString()}");
+                            continue;
+                        }                        
+
                         var args = session.Format(row["Arguments"].ToString());
                         var IgnoreErrors = session.Format(row["IgnoreErrors"].ToString());
 
@@ -356,9 +370,9 @@ namespace PowerShellActions
                 foreach (XElement row in doc.Root.Elements("d"))
                 {
                     string file = row.Attribute("file").Value;
-
                     string arguments = row.Attribute("args").Value;
                     string IgnoreErrors = row.Attribute("IgnoreErrors").Value;
+                    session.Log($"Executing PowerShell file: '{file}' {arguments}");
 
                     using (var task = new PowerShellTask(file, arguments, session))
                     {
