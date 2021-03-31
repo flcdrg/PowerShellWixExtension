@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShellWixExtension", "PowerShellWixExtension\PowerShellWixExtension.csproj", "{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -38,7 +38,8 @@ Global
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|x86.ActiveCfg = Debug|x86
+		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Debug|x86.Build.0 = Debug|x86
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1A335B5-3575-4AEC-9260-8C18CE59DB9B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -48,8 +49,8 @@ Global
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|x86.Build.0 = Debug|Any CPU
+		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|x86.ActiveCfg = Debug|x86
+		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Debug|x86.Build.0 = Debug|x86
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A83F788-68C1-4533-8732-6B8E3FBC5282}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
