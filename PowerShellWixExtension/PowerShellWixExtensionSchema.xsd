@@ -57,7 +57,7 @@
           
           <xs:attribute name="Condition" type="xs:string" use="optional">
             <xs:annotation>
-              <xs:documentation>Condition on executing the script.</xs:documentation>
+              <xs:documentation>Condition on executing the script. For example, 'NOT Installed' or 'REMOVE="ALL"'</xs:documentation>
             </xs:annotation>
           </xs:attribute>
 
@@ -120,7 +120,7 @@
 
       <xs:attribute name="Condition" type="xs:string" use="optional">
         <xs:annotation>
-          <xs:documentation>Condition on executing the script.</xs:documentation>
+          <xs:documentation>Condition on executing the script. For example, 'NOT Installed' or 'REMOVE="ALL"'</xs:documentation>
         </xs:annotation>
       </xs:attribute>
 

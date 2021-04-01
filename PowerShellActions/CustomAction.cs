@@ -17,21 +17,23 @@ namespace PowerShellActions
         // Specify or calculate the total number of ticks the custom action adds to the length of the ProgressBar
         public const uint TotalTicks = TickIncrement * NumberItems;
         private const uint NumberItems = 100;
+
         private const string PowerShellFilesElevatedDeferredProperty = "PowerShellFilesElevatedDeferred";
         private const string PowerShellFilesDeferredProperty = "PowerShellFilesDeferred";
         private const string PowerShellScriptsElevatedDeferredProperty = "PowerShellScriptsElevatedDeferred";
         private const string PowerShellScriptsDeferredProperty = "PowerShellScriptsDeferred";
 
+        private const string PowerShellFilesElevatedUninstallDeferredProperty = "PowerShellFilesElevatedUninstallDeferred";
+        private const string PowerShellFilesUninstallDeferredProperty = "PowerShellFilesUninstallDeferred";
+        private const string PowerShellScriptsElevatedUninstallDeferredProperty = "PowerShellScriptsElevatedUninstallDeferred";
+        private const string PowerShellScriptsUninstallDeferredProperty = "PowerShellScriptsUninstallDeferred";
+
         [CustomAction]
         public static ActionResult PowerShellFilesImmediate(Session session)
         {
-            return FilesImmediate(session, 0, PowerShellFilesDeferredProperty);
-        }
+            session.Log("PowerShellFilesImmediate start");
 
-        [CustomAction]
-        public static ActionResult PowerShellFilesElevatedImmediate(Session session)
-        {
-            return FilesImmediate(session, 1, PowerShellFilesElevatedDeferredProperty);
+            return FilesImmediate(session, 0, PowerShellFilesDeferredProperty);
         }
 
         [CustomAction]
@@ -43,6 +45,14 @@ namespace PowerShellActions
         }
 
         [CustomAction]
+        public static ActionResult PowerShellFilesElevatedImmediate(Session session)
+        {
+            session.Log("PowerShellFilesElevatedImmediate start");
+
+            return FilesImmediate(session, 1, PowerShellFilesElevatedDeferredProperty);
+        }
+
+        [CustomAction]
         public static ActionResult PowerShellFilesElevatedDeferred(Session session)
         {
             session.Log("PowerShellFilesElevatedDeferred start");
@@ -51,27 +61,101 @@ namespace PowerShellActions
         }
 
         [CustomAction]
-        public static ActionResult PowerShellScriptsImmediate(Session session)
+        public static ActionResult PowerShellFilesUninstall(Session session)
         {
-            return ScriptsImmediate(session, 0, PowerShellScriptsDeferredProperty);
+            session.Log("PowerShellFilesUninstall start");
+
+            return FilesImmediate(session, 0, PowerShellFilesUninstallDeferredProperty);
+        }
+
+
+        [CustomAction]
+        public static ActionResult PowerShellFilesUninstallDeferred(Session session)
+        {
+            session.Log("PowerShellFilesUninstallDeferred start");
+
+            return FilesDeferred(session, PowerShellFilesUninstallDeferredProperty);
+        }
+
+
+        [CustomAction]
+        public static ActionResult PowerShellFilesElevatedUninstall(Session session)
+        {
+            session.Log("PowerShellFilesElevatedUninstall start");
+
+            return FilesImmediate(session, 1, PowerShellFilesElevatedUninstallDeferredProperty);
         }
 
         [CustomAction]
-        public static ActionResult PowerShellScriptsElevatedImmediate(Session session)
+        public static ActionResult PowerShellFilesElevatedUninstallDeferred(Session session)
         {
-            return ScriptsImmediate(session, 1, PowerShellScriptsElevatedDeferredProperty);
+            session.Log("PowerShellFilesElevatedUninstallDeferred start");
+
+            return FilesDeferred(session, PowerShellFilesElevatedUninstallDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsImmediate(Session session)
+        {
+            session.Log("PowerShellScriptsImmediate start");
+
+            return ScriptsImmediate(session, 0, PowerShellScriptsDeferredProperty);
         }
 
         [CustomAction]
         public static ActionResult PowerShellScriptsDeferred(Session session)
         {
+            session.Log("PowerShellScriptsDeferred start");
+
             return ScriptsDeferred(session, PowerShellScriptsDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsElevatedImmediate(Session session)
+        {
+            session.Log("PowerShellScriptsElevatedImmediate start");
+
+            return ScriptsImmediate(session, 1, PowerShellScriptsElevatedDeferredProperty);
         }
 
         [CustomAction]
         public static ActionResult PowerShellScriptsElevatedDeferred(Session session)
         {
+            session.Log("PowerShellScriptsElevatedDeferred start");
+
             return ScriptsDeferred(session, PowerShellScriptsElevatedDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsUninstall(Session session)
+        {
+            session.Log("PowerShellScriptsUninstall start");
+
+            return ScriptsImmediate(session, 0, PowerShellScriptsUninstallDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsUninstallDeferred(Session session)
+        {
+            session.Log("PowerShellScriptsUninstallDeferred start");
+
+            return ScriptsDeferred(session, PowerShellScriptsUninstallDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsElevatedUninstall(Session session)
+        {
+            session.Log("PowerShellScriptsElevatedUninstall start");
+
+            return ScriptsImmediate(session, 1, PowerShellScriptsElevatedUninstallDeferredProperty);
+        }
+
+        [CustomAction]
+        public static ActionResult PowerShellScriptsElevatedUninstallDeferred(Session session)
+        {
+            session.Log("PowerShellScriptsElevatedUninstallDeferred start");
+
+            return ScriptsDeferred(session, PowerShellScriptsElevatedUninstallDeferredProperty);
         }
 
         [Serializable]
