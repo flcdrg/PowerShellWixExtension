@@ -22,13 +22,19 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: env
-      run: |
-        get-childitem env:
-        whoami /all
+    - name: Nerdbank.GitVersioning
+      uses: dotnet/nbgv@v0.4.0
+      with:
+        # Defines ALL version variables as environment variables, with a "NBGV_" prefix.
+        setAllVars: true
+        # Defines a few common version variables as environment variables, with a "Git" prefix (e.g. GitBuildVersion, GitBuildVersionSimple, GitAssemblyInformationalVersion).
+        setCommonVars: true
         
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
+        
+    - name: NuGet Restore
+      run: nuget restore
 
     - name: Build
       run: msbuild $env:Solution_Name
@@ -54,3 +60,11 @@ jobs:
       with:
         name: test logs
         path: ${{ github.workspace }}\**\*.log
+
+    - name: Pack
+      run: nuget pack .\PowerShellWixExtension.nuspec -Version "$env:NBGV_NuGetPackageVersion" -Properties "Configuration=$env:Configuration"
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg

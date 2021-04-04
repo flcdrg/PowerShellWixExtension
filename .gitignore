@@ -158,3 +158,4 @@ $RECYCLE.BIN/
 /NuGet/tools/lib
 /NuGet/*.nupkg
 /.vs/
+/*.nupkg

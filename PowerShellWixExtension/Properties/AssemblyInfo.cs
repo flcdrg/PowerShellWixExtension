@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Tools.WindowsInstallerXml;
 
@@ -11,7 +10,7 @@ using Microsoft.Tools.WindowsInstallerXml;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PowerShellWixExtension")]
-[assembly: AssemblyCopyright("Copyright © David Gardiner 2014-2016")]
+[assembly: AssemblyCopyright("Copyright © David Gardiner 2014-2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,18 +21,5 @@ using Microsoft.Tools.WindowsInstallerXml;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7abfedd7-d0f1-489a-a1f4-fb5e3e0bd038")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
 
 [assembly: AssemblyDefaultWixExtension(typeof(PowerShellWixExtension.PowerShellWixExtension))]
