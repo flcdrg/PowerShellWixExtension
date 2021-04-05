@@ -16,18 +16,18 @@
                   Execute="deferred"
                   Return="check" />
 	  
-	<CustomAction Id="PowerShellScriptsUninstall"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellScriptsUninstall"
-				  Execute="immediate"
-				  Return="check" />
+    <CustomAction Id="PowerShellScriptsUninstall"
+                  BinaryKey="CA_DLL"
+                  DllEntry="PowerShellScriptsUninstall"
+                  Execute="immediate"
+                  Return="check" />
 
-	<CustomAction Id="PowerShellScriptsUninstallDeferred"
-	        	  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellScriptsUninstallDeferred"
-				  Impersonate="yes"
-				  Execute="deferred"
-				  Return="check" />
+    <CustomAction Id="PowerShellScriptsUninstallDeferred"
+        	  BinaryKey="CA_DLL"
+        	  DllEntry="PowerShellScriptsUninstallDeferred"
+        	  Impersonate="yes"
+        	  Execute="deferred"
+        	  Return="check" />
 
     <CustomAction Id="PowerShellScriptsElevatedImmediate"
                   BinaryKey="CA_DLL"
@@ -42,18 +42,18 @@
                   Execute="deferred"
                   Return="check" />
 
-	<CustomAction Id="PowerShellScriptsElevatedUninstall"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellScriptsElevatedUninstall"
-				  Execute="immediate"
-				  Return="check" />
+    <CustomAction Id="PowerShellScriptsElevatedUninstall"
+        	  BinaryKey="CA_DLL"
+        	  DllEntry="PowerShellScriptsElevatedUninstall"
+        	  Execute="immediate"
+        	  Return="check" />
 
-	<CustomAction Id="PowerShellScriptsElevatedUninstallDeferred"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellScriptsElevatedUninstallDeferred"
-				  Impersonate="no"
-				  Execute="deferred"
-				  Return="check" />
+    <CustomAction Id="PowerShellScriptsElevatedUninstallDeferred"
+		  BinaryKey="CA_DLL"
+		  DllEntry="PowerShellScriptsElevatedUninstallDeferred"
+		  Impersonate="no"
+		  Execute="deferred"
+		  Return="check" />
 	  
     <CustomAction Id="PowerShellFilesImmediate"
                   BinaryKey="CA_DLL"
@@ -68,18 +68,18 @@
                   Execute="deferred"
                   Return="check" />
 
-	<CustomAction Id="PowerShellFilesUninstall"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellFilesUninstall"
-				  Execute="immediate"
-				  Return="check" />
+    <CustomAction Id="PowerShellFilesUninstall"
+		  BinaryKey="CA_DLL"
+		  DllEntry="PowerShellFilesUninstall"
+		  Execute="immediate"
+		  Return="check" />
 	  
-	<CustomAction Id="PowerShellFilesUninstallDeferred"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellFilesUninstallDeferred"
-				  Impersonate="yes"
-				  Execute="deferred"
-				  Return="check" />
+    <CustomAction Id="PowerShellFilesUninstallDeferred"
+		  BinaryKey="CA_DLL"
+		  DllEntry="PowerShellFilesUninstallDeferred"
+		  Impersonate="yes"
+		  Execute="deferred"
+		  Return="check" />
 
     <CustomAction Id="PowerShellFilesElevatedImmediate"
                   BinaryKey="CA_DLL"
@@ -94,20 +94,20 @@
                   Execute="deferred"
                   Return="check" />
 
-	<CustomAction Id="PowerShellFilesElevatedUninstall"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellFilesElevatedUninstall"
-				  Execute="immediate"
-				  Return="check" />
+    <CustomAction Id="PowerShellFilesElevatedUninstall"
+		  BinaryKey="CA_DLL"
+		  DllEntry="PowerShellFilesElevatedUninstall"
+		  Execute="immediate"
+		  Return="check" />
 
-	<CustomAction Id="PowerShellFilesElevatedUninstallDeferred"
-				  BinaryKey="CA_DLL"
-				  DllEntry="PowerShellFilesElevatedUninstallDeferred"
-				  Impersonate="no"
-				  Execute="deferred"
-				  Return="check" />	  
+    <CustomAction Id="PowerShellFilesElevatedUninstallDeferred"
+		  BinaryKey="CA_DLL"
+		  DllEntry="PowerShellFilesElevatedUninstallDeferred"
+		  Impersonate="no"
+		  Execute="deferred"
+		  Return="check" />	  
 
-	<InstallExecuteSequence>
+    <InstallExecuteSequence>
       <!-- These are the 'immediate' actions that prep the data for the 'deferred' actions-->
       <Custom Action="PowerShellScriptsImmediate" Before="PowerShellScriptsDeferred" Overridable="yes">NOT Installed</Custom>
 
@@ -127,23 +127,23 @@
       <Custom Action="PowerShellFilesElevatedDeferred" After="InstallFiles" Overridable="yes">NOT Installed</Custom>
 
       <!-- 'Uninstall immediate' actions -->
-	  <Custom Action="PowerShellScriptsUninstall" Before="PowerShellScriptsUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellScriptsUninstall" Before="PowerShellScriptsUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellScriptsElevatedUninstall" Before="PowerShellScriptsElevatedUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellScriptsElevatedUninstall" Before="PowerShellScriptsElevatedUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellFilesUninstall" Before="PowerShellFilesUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellFilesUninstall" Before="PowerShellFilesUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellFilesElevatedUninstall" Before="PowerShellFilesElevatedUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellFilesElevatedUninstall" Before="PowerShellFilesElevatedUninstallDeferred" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <!-- 'Uninstall deferred' actions -->
-	  <Custom Action="PowerShellScriptsUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
+      <!-- 'Uninstall deferred' actions -->
+      <Custom Action="PowerShellScriptsUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellScriptsElevatedUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellScriptsElevatedUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellFilesUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
+      <Custom Action="PowerShellFilesUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
 
-	  <Custom Action="PowerShellFilesElevatedUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
-	</InstallExecuteSequence>
+      <Custom Action="PowerShellFilesElevatedUninstallDeferred" After="RemoveFiles" Overridable="yes">REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
 
     <UI>
       <ProgressText Action="PowerShellFilesDeferred">PowerShell Files</ProgressText>

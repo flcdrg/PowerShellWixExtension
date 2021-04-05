@@ -176,7 +176,7 @@ namespace PowerShellActions
             try
             {
                 List<ScriptActionData> scripts = new List<ScriptActionData>();
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors` FROM `PowerShellScripts` WHERE `Elevated` = {0} ORDER BY `Order`", elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `Script`, `IgnoreErrors`, `Condition` FROM `PowerShellScripts` WHERE `Elevated` = {0} ORDER BY `Order`", elevated)))
                 {
                     view.Execute();
 
@@ -345,7 +345,7 @@ namespace PowerShellActions
             try
             {
                 XDocument doc;
-                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors` FROM `{0}` WHERE `Elevated` = {1} ORDER BY `Order`", tableName, elevated)))
+                using (View view = db.OpenView(string.Format("SELECT `Id`, `File`, `Arguments`, `IgnoreErrors`, `Condition` FROM `{0}` WHERE `Elevated` = {1} ORDER BY `Order`", tableName, elevated)))
                 {
                     view.Execute();
 
@@ -464,7 +464,7 @@ namespace PowerShellActions
                         {
                             bool result = task.Execute();
                             session.Log("PowerShell non-terminating errors: {0}", !result);
-                        if (!result)
+                            if (!result)
                             {
                                 if (!IgnoreErrors.Equals("0"))
                                 {
@@ -472,7 +472,7 @@ namespace PowerShellActions
                                 }
                                 else
                                 {
-                            session.Log("Returning Failure");
+                                    session.Log("Returning Failure");
                                     return ActionResult.Failure;
                                 }
                             }
