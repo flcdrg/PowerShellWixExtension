@@ -54,7 +54,13 @@
               <xs:documentation>Order of script execution. Note that ordering is within the context and type. For example, elevated scripts will run on different context than non-elevated. Defaults to run in line-number order. Files with explicit ordering will be executed before files with implicit ordering</xs:documentation>
             </xs:annotation>
           </xs:attribute>
-        
+          
+          <xs:attribute name="Condition" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>Condition on executing the script. For example, 'NOT Installed' or 'REMOVE="ALL"'</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+
         </xs:extension>       
       </xs:simpleContent>
       
@@ -109,6 +115,12 @@
       <xs:attribute name="Order" use="optional" type="xs:int">
         <xs:annotation>
           <xs:documentation>Order of script execution. Note that ordering is within the context and type. For example, elevated scripts will run on different context than non-elevated. Defaults to run in line-number order. Files with explicit ordering will be executed before files with implicit ordering</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+
+      <xs:attribute name="Condition" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Condition on executing the script. For example, 'NOT Installed' or 'REMOVE="ALL"'</xs:documentation>
         </xs:annotation>
       </xs:attribute>
 
