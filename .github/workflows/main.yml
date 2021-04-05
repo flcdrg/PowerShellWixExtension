@@ -32,8 +32,8 @@ jobs:
           # Defines a few common version variables as environment variables, with a "Git" prefix (e.g. GitBuildVersion, GitBuildVersionSimple, GitAssemblyInformationalVersion).
           setCommonVars: true
 
-      # if: github.ref == 'refs/heads/master' # Running this action only for master branch
       - uses: release-drafter/release-drafter@v5
+        if: github.ref == 'refs/heads/master' # Running this action only for master branch
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,8 +47,6 @@ jobs:
 
     env:
       Configuration: Release
-      # Release_Id: ${{ needs.update_release_draft.outputs.Release_Id }}
-      # Release_upload_url: ${{ needs.update_release_draft.outputs.Release_upload_url }}
       Release_body: ${{ needs.update_release_draft.outputs.Release_body }}
 
     steps:
@@ -102,9 +100,9 @@ jobs:
         name: nupkg
         path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg
 
-      # if: github.ref == 'refs/heads/master' # Running this action only for master branch    
     - name: Remove existing release asset
       uses: flcdrg/remove-release-asset-action@v1
+      if: github.ref == 'refs/heads/master' # Running this action only for master branch      
       with:
         # The release id to remove asset from
         release_id: ${{ needs.update_release_draft.outputs.Release_Id }}
@@ -113,10 +111,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # if: github.ref == 'refs/heads/master' # Running this action only for master branch
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
+      if: github.ref == 'refs/heads/master' # Running this action only for master branch
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
