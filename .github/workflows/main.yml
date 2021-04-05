@@ -1,0 +1,126 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  update_release_draft:
+    name: Update release draft
+    runs-on: ubuntu-latest
+    outputs:
+      Release_Id: ${{ steps.create_release.outputs.id}}
+      Release_name: ${{ steps.create_release.outputs.name}}
+      Release_tag_name: ${{ steps.create_release.outputs.tag_name}}
+      Release_body: ${{ steps.create_release.outputs.body}}
+      Release_html_url: ${{ steps.create_release.outputs.html_url}}
+      Release_upload_url: ${{ steps.create_release.outputs.upload_url}}
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Nerdbank.GitVersioning
+        uses: dotnet/nbgv@v0.4.0
+        with:
+          # Defines ALL version variables as environment variables, with a "NBGV_" prefix.
+          setAllVars: true
+          # Defines a few common version variables as environment variables, with a "Git" prefix (e.g. GitBuildVersion, GitBuildVersionSimple, GitAssemblyInformationalVersion).
+          setCommonVars: true
+
+      # if: github.ref == 'refs/heads/master' # Running this action only for master branch
+      - uses: release-drafter/release-drafter@v5
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: ${{ env.NBGV_SemVer2 }}
+
+  build:
+    needs: [update_release_draft]
+
+    runs-on: windows-latest
+
+    env:
+      Configuration: Release
+      # Release_Id: ${{ needs.update_release_draft.outputs.Release_Id }}
+      # Release_upload_url: ${{ needs.update_release_draft.outputs.Release_upload_url }}
+      Release_body: ${{ needs.update_release_draft.outputs.Release_body }}
+
+    steps:
+    - name: Dump needs context
+      env:
+        NEEDS_CONTEXT: ${{ toJson(needs) }}
+      run: echo "$NEEDS_CONTEXT"
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+        
+    - name: NuGet Restore
+      run: nuget restore
+
+    - name: Build
+      run: msbuild PowerShellWixExtension.sln
+      # NBGV is run as part of the build, so actions after here have access to NBGV_ env variables.
+
+    # For some reason, running msiexec from Pester doesn't work quite right.
+    - name: msiexec
+      run: |
+        Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixInlineScriptTest\bin\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx ${{ github.workspace }}\inlinescript-install.log"
+        Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixInlineScriptTest\bin\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx ${{ github.workspace }}\inlinescript-uninstall.log"
+        Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixTest\bin\Release\PowerShellWixTest.msi /q /liwearucmopvx ${{ github.workspace }}\script-install.log"
+        Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixTest\bin\Release\PowerShellWixTest.msi /q /liwearucmopvx ${{ github.workspace }}\script-uninstall.log"
+
+    - name: Pester
+      id: test_module
+      uses: zyborg/pester-tests-report@v1
+      with:
+        include_paths: tests
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        tests_fail_step: true
+
+    - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: test logs
+        path: ${{ github.workspace }}\**\*.log
+
+    - name: Pack
+      run: nuget pack .\PowerShellWixExtension.nuspec -Version "$env:NBGV_NuGetPackageVersion" -Properties "Configuration=$env:Configuration;releasenotes=$env:Release_body"
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg
+
+      # if: github.ref == 'refs/heads/master' # Running this action only for master branch    
+    - name: Remove existing release asset
+      uses: flcdrg/remove-release-asset-action@v1
+      with:
+        # The release id to remove asset from
+        release_id: ${{ needs.update_release_draft.outputs.Release_Id }}
+        # The name of the asset you want to remove
+        asset_name: PowerShellWixExtension.nupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # if: github.ref == 'refs/heads/master' # Running this action only for master branch
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.update_release_draft.outputs.Release_upload_url }}
+        asset_path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg
+        asset_name: PowerShellWixExtension.nupkg
+        asset_content_type: application/octet-stream        
