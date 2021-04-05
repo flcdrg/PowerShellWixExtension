@@ -39,6 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: ${{ env.NBGV_SemVer2 }}
+          prerelease: true
 
   build:
     needs: [update_release_draft]
