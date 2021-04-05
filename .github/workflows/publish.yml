@@ -23,5 +23,5 @@ jobs:
       - run: dir -recurse
 
       - name: push
-        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secret.NUGET_API_KEY }}
+        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
     
