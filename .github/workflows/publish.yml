@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  main:
+  publish:
     runs-on: windows-latest
  
     steps:  
@@ -17,7 +17,7 @@ jobs:
           owner: ${{ github.event.repository.owner.login }}
           repo: ${{ github.event.repository.name }}
           tag: ${{ github.event.release.tag_name }}
-          file: '*.nupkg'
+          file: '/.*\.nupkg/'
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - run: dir -recurse
