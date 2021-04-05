@@ -1,0 +1,27 @@
+name: Publish
+
+on:
+  release:
+    types: # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#release
+      - released
+
+jobs:
+  main:
+    runs-on: windows-latest
+ 
+    steps:  
+
+      - name: Download Assets
+        uses: i3h/download-release-asset@v1.2.0
+        with:
+          owner: ${{ github.event.repository.owner.login }}
+          repo: ${{ github.event.repository.name }}
+          tag: ${{ github.event.release.tag_name }}
+          file: '*.nupkg'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - run: dir -recurse
+
+      - name: push
+        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secret.NUGET_API_KEY }}
+    

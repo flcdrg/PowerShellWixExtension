@@ -13,10 +13,7 @@
         <repository type="git" url="https://github.com/flcdrg/PowerShellWixExtension" />
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>WiX PowerShell MSI Installer WixToolset XML</tags>
-        <releaseNotes>
-* Support ignoring PS failures (from @nirbar)
-* Handle null results (from @nirbar)
-        </releaseNotes>
+        <releaseNotes>$releasenotes$</releaseNotes>
     </metadata>
     <files>
         <file src="NuGet\content\*.*" target="content" /> 
