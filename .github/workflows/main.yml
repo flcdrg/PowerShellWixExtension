@@ -46,6 +46,9 @@ jobs:
 
     runs-on: windows-2019
 
+    permissions:
+      checks: write
+
     env:
       Configuration: Release
       Release_body: ${{ needs.update_release_draft.outputs.Release_body }}
