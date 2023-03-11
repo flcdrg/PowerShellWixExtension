@@ -90,7 +90,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         tests_fail_step: true
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: test logs
@@ -99,7 +99,7 @@ jobs:
     - name: Pack
       run: nuget pack .\PowerShellWixExtension.nuspec -Version "$env:NBGV_NuGetPackageVersion" -Properties "Configuration=$env:Configuration;releasenotes=$env:Release_body"
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: nupkg
         path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg
