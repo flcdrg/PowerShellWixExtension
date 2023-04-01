@@ -12,7 +12,7 @@ jobs:
     steps:  
 
       - name: Download Assets
-        uses: i3h/download-release-asset@v1.2.0
+        uses: i3h/download-release-asset@v1.3.3
         with:
           owner: ${{ github.event.repository.owner.login }}
           repo: ${{ github.event.repository.name }}
