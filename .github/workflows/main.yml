@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Nerdbank.GitVersioning
-        uses: dotnet/nbgv@v0.4.0
+        uses: dotnet/nbgv@v0.4.1
         with:
           # Defines ALL version variables as environment variables, with a "NBGV_" prefix.
           setAllVars: true
