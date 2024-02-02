@@ -32,7 +32,7 @@ jobs:
           # Defines a few common version variables as environment variables, with a "Git" prefix (e.g. GitBuildVersion, GitBuildVersionSimple, GitAssemblyInformationalVersion).
           setCommonVars: true
 
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         if: github.ref == 'refs/heads/master' # Running this action only for master branch
         id: create_release
         env:
