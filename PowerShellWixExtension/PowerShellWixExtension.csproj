@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+	  <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PowerShellLibrary\PowerShellLibrary.wixproj" />
-    <Reference Include="wix">
-      <HintPath>$(WIX)\bin\wix.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\PowerShellLibrary\PowerShellLibrary.wixproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="WixToolset.Extensibility" PrivateAssets="all" Version="4.0.5" />
+	</ItemGroup>
   <ItemGroup>
     <Compile Update="PowerShellWixExtensionSchema.cs">
       <DependentUpon>PowerShellWixExtensionSchema.xsd</DependentUpon>
@@ -26,11 +28,6 @@
   <ItemGroup>
     <EmbeddedResource Include="TableDefinitions.xml">
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Libs\PowerShellLibrary.wixlib">
-      <Link>PowerShellLibrary.wixlib</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
