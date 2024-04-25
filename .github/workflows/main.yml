@@ -114,6 +114,7 @@ jobs:
         asset_name: PowerShellWixExtension.nupkg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
 
     - name: Upload Release Asset
       id: upload-release-asset 
