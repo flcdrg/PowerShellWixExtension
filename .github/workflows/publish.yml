@@ -7,13 +7,18 @@ on:
 
 jobs:
   publish:
-    runs-on: windows-latest
-    permissions: write-all
+    runs-on: ubuntu-latest
  
     steps:  
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
 
       - name: Download Assets
         uses: i3h/download-release-asset@v1.3.3
@@ -24,8 +29,10 @@ jobs:
           file: '/.*\.nupkg/'
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - run: dir -recurse
+      - run: ls -alR
+        name: List files
 
-      - name: push
-        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
-    
+      - name: Publish the package to nuget.org
+        run: dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}

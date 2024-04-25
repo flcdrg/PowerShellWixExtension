@@ -19,6 +19,10 @@ jobs:
       Release_upload_url: ${{ steps.create_release.outputs.upload_url}}
       
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -39,7 +43,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: ${{ env.NBGV_SemVer2 }}
-          prerelease: true
 
   build:
     needs: [update_release_draft]
