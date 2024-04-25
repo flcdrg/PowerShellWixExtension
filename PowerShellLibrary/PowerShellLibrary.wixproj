@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="5.0.0" />
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="4.0.5" />
   <PropertyGroup>
     <ProductVersion>3.8</ProductVersion>
     <OutputType>Library</OutputType>
@@ -27,7 +27,7 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="5.0.0" />
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="4.0.5" />
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\Libs" SkipUnchangedFiles="true" />
   </Target>

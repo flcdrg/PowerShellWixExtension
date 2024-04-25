@@ -1,60 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
-using Microsoft.Tools.WindowsInstallerXml;
+using System.Xml.Linq;
+
+using WixToolset.Data;
+using WixToolset.Data.WindowsInstaller;
+using WixToolset.Extensibility;
+using WixToolset.Extensibility.Data;
 
 namespace PowerShellWixExtension
 {
-    public class PowerShellCompilerExtension : CompilerExtension
+    public class PowerShellCompilerExtension : BaseCompilerExtension
     {
-        private readonly XmlSchema _schema;
+        //private readonly XmlSchema _schema;
 
-        public PowerShellCompilerExtension()
-        {
-            _schema = LoadXmlSchemaHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellWixExtensionSchema.xsd");
-        }
+        //public PowerShellCompilerExtension()
+        //{
+        //    _schema = LoadXmlSchemaHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellWixExtensionSchema.xsd");
+        //}
 
-        public override XmlSchema Schema
-        {
-            get
-            {
-                return _schema;
-            }
-        }
+        //public override XmlSchema Schema
+        //{
+        //    get
+        //    {
+        //        return _schema;
+        //    }
+        //}
 
-        public override void ParseElement(SourceLineNumberCollection sourceLineNumbers, XmlElement parentElement, XmlElement element, params string[] contextValues)
+        public override void ParseElement(Intermediate intermediate, IntermediateSection section, XElement parentElement, XElement element,
+            IDictionary<string, string> context)
         {
-            switch (parentElement.LocalName)
+            switch (parentElement.Name.LocalName)
             {
                 case "Product":
                 case "Fragment":
-                    switch (element.LocalName)
+                    switch (element.Name.LocalName)
                     {
                         case "Script":
                             ParseScriptElement(element);
                             break;
                         case "File":
-                            ParseFileElement(element);
+                            ParseFileElement(element, section);
                             break;
                         default:
-                            Core.UnexpectedElement(parentElement, element);
+                            ParseHelper.UnexpectedElement(parentElement, element);
                             break;
                     }
 
                     break;
                 default:
-                    Core.UnexpectedElement(
+                    ParseHelper.UnexpectedElement(
                         parentElement,
                         element);
                     break;
             }
+
         }
 
-        private void ParseFileElement(XmlNode node)
+        private void ParseFileElement(XElement node, IntermediateSection section)
         {
-            SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
+            var sourceLineNumber = ParseHelper.GetSourceLineNumbers(node);
 
             string superElementId = null;
             string file = null;
@@ -62,60 +68,63 @@ namespace PowerShellWixExtension
             string condition = null;
             var elevated = YesNoType.No;
             YesNoType ignoreErrors = YesNoType.No;
-            int order = 1000000000 + sourceLineNumber[0].LineNumber;
+            var order = 1000000000 + sourceLineNumber.LineNumber;
 
-            foreach (XmlAttribute attribute in node.Attributes)
+            foreach (var attribute in node.Attributes())
             {
-                if (attribute.NamespaceURI.Length == 0 ||
-                    attribute.NamespaceURI == _schema.TargetNamespace)
+                if (attribute.Name.NamespaceName.Length == 0 ||
+                    attribute.Name.Namespace == Namespace)
                 {
-                    switch (attribute.LocalName)
+                    switch (attribute.Name.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
+                            superElementId = ParseHelper.GetAttributeIdentifierValue(sourceLineNumber, attribute);
                             break;
                         case "File":
-                            file = Core.GetAttributeValue(sourceLineNumber, attribute, false);
+                            file = ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         case "Arguments":
-                            arguments = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            arguments = ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         case "Elevated":
-                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            elevated = ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "IgnoreErrors":
-                            ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            ignoreErrors = ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "Order":
-                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            order = ParseHelper.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
                         case "Condition":
-                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            condition = ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         default:
-                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
+                            ParseHelper.UnexpectedAttribute(node, attribute);
                             break;
                     }
                 }
                 else
                 {
-                    Core.UnsupportedExtensionAttribute(sourceLineNumber, attribute);
+                    Messaging.Write(ErrorMessages.UnsupportedExtensionAttribute(sourceLineNumber, attribute.Parent.Name.LocalName, attribute.Name.LocalName));
                 }
             }
 
             if (string.IsNullOrEmpty(superElementId))
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedAttribute(sourceLineNumber, node.Name, "Id"));
+                Messaging.Write(ErrorMessages.ExpectedAttribute(sourceLineNumber, node.Name.LocalName, "Id"));
             }
 
             if (string.IsNullOrEmpty(file))
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedElement(sourceLineNumber, node.Name, "File"));
+                Messaging.Write(ErrorMessages.ExpectedElement(sourceLineNumber, "File"));
             }
 
-            if (!Core.EncounteredError)
+            if (order == null)
+            {
+                Messaging.Write(ErrorMessages.ExpectedAttribute(sourceLineNumber, node.Name.LocalName, "Order"));
+            }
+
+            if (!Messaging.EncounteredError)
             {
                 Row superElementRow = Core.CreateRow(sourceLineNumber, "PowerShellFiles");
 
@@ -128,10 +137,10 @@ namespace PowerShellWixExtension
                 superElementRow[6] = condition;
             }
 
-            Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
+            ParseHelper.CreateCustomActionReference(sourceLineNumber, section, "PowerShellFilesImmediate", Context.Platform, CustomActionPlatforms.X86 | CustomActionPlatforms.X64 | CustomActionPlatforms.ARM64);
         }
 
-        private void ParseScriptElement(XmlNode node)
+        private void ParseScriptElement(XElement node)
         {
             SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
 
@@ -150,23 +159,23 @@ namespace PowerShellWixExtension
                     switch (attribute.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
+                            superElementId = ParseHelper.GetAttributeIdentifierValue(sourceLineNumber, attribute);
                             break;
                         case "Elevated":
-                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            elevated = ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "IgnoreErrors":
-                            ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            ignoreErrors = ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "Order":
-                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            order = ParseHelper.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
                         case "Condition":
-                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            condition = ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
 
                         default:
-                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
+                            ParseHelper.UnexpectedAttribute(sourceLineNumber, attribute);
                             break;
                     }
                 }
@@ -210,5 +219,7 @@ namespace PowerShellWixExtension
 
             Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");
         }
+
+        public override XNamespace Namespace => "http://schemas.gardiner.net.au/PowerShellWixExtensionSchema";
     }
 }
