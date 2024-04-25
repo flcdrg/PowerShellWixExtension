@@ -62,4 +62,4 @@ The four defined actions are:
 
 ### Inline Scripts
 
-* Be aware that if your inline script uses square brackets [ ], you'll need to escape them like [\\[] [\\]] otherwise they will be interpreted as MSI properties (unless that is what you wanted!)
+* Be aware that if your inline script uses square brackets \[ \], you'll need to escape them like [\\[] [\\]] otherwise they will be interpreted as MSI properties (unless that is what you wanted!)
