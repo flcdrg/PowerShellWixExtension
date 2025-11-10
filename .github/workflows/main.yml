@@ -50,7 +50,7 @@ jobs:
   build:
     needs: [update_release_draft]
 
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     permissions:
       checks: write
