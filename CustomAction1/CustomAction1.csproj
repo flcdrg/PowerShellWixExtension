@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
@@ -8,7 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WixToolset.Dtf.CustomAction" Version="4.0.5" />
-    <PackageReference Include="WixToolset.Dtf.WindowsInstaller" Version="4.0.5" />
+    <PackageReference Include="WixToolset.Dtf.CustomAction" Version="5.0.0" />
+    <PackageReference Include="WixToolset.Dtf.WindowsInstaller" Version="5.0.0" />
   </ItemGroup>
 </Project>
