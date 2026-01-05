@@ -112,7 +112,7 @@ jobs:
           path: ${{ github.workspace }}\PowerShellWixExtension.${{ env.NBGV_NuGetPackageVersion }}.nupkg
 
       - name: Remove existing release asset
-        uses: flcdrg/remove-release-asset-action@v4
+        uses: flcdrg/remove-release-asset-action@v5
         if: github.ref == 'refs/heads/main' # Running this action only for main branch
         with:
           # The release id to remove asset from
