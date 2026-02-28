@@ -1,32 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<tableDefinitions xmlns="http://schemas.microsoft.com/wix/2006/tables">
+﻿<tableDefinitions xmlns="http://wixtoolset.org/schemas/v4/wi/tables">
 
   <tableDefinition name="PowerShellScripts" createSymbols="yes">
-    <columnDefinition
-      name="Id"
-      type="string"
-      length="72"
-      primaryKey="yes"
-      category="identifier"
-      description="Primary key for this element" />
+    <columnDefinition name="Id" type="string" length="72" primaryKey="yes" category="identifier" description="Primary key for this element" />
 
-    <columnDefinition
-      name="Script"
-      type="string"
-      category="text"
-      length="0"
-      nullable="no"
-      description="Script Data" />
+    <columnDefinition name="Script" type="string" category="text" length="0" nullable="no" description="Script Data" />
 
-    <columnDefinition
-      name="Elevated"
-      type="number"
-      category="integer"
-      length="0"
-       minValue="0"
-       maxValue="1"
-      nullable="no"
-      description="Run as elevated" />
+    <columnDefinition name="Elevated" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="Run as elevated" />
 
     <columnDefinition name="IgnoreErrors" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="When non-zero, PowerShell errors are ignored." />
     <columnDefinition name="Order" type="number" category="integer" length="4" minValue="0" maxValue="2000000000" nullable="no" description="Order of execution." />
@@ -35,45 +14,15 @@
   </tableDefinition>
 
   <tableDefinition name="PowerShellFiles" createSymbols="yes">
-    <columnDefinition
-      name="Id"
-      type="string"
-      length="72"
-      primaryKey="yes"
-      category="identifier"
-      description="Primary key for this element" />
+    <columnDefinition name="Id" type="string" length="72" primaryKey="yes" category="identifier" description="Primary key for this element" />
 
-    <columnDefinition name="File"
-                      type="string" length="255" modularize="property"
-                    category="formatted" description="The .XML file in which to write the information"/>
+    <columnDefinition name="File" type="string" length="255" modularize="property" category="formatted" description="The .XML file in which to write the information" />
 
-    <columnDefinition
-      name="Arguments"
-      type="string"
-      category="text"
-      length="0"
-      nullable="yes"
-      description="Arguments" />
+    <columnDefinition name="Arguments" type="string" category="text" length="0" nullable="yes" description="Arguments" />
 
-    <columnDefinition
-  name="Elevated"
-  type="number"
-  category="integer"
-  length="0"
-   minValue="0"
-   maxValue="1"
-  nullable="no"
-  description="Run as elevated" />
+    <columnDefinition name="Elevated" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="Run as elevated" />
 
-    <columnDefinition
-  name="IgnoreErrors"
-  type="number"
-  category="integer"
-  length="0"
-   minValue="0"
-   maxValue="1"
-  nullable="no"
-  description="When non-zero, PowerShell errors are ignored." />
+    <columnDefinition name="IgnoreErrors" type="number" category="integer" length="0" minValue="0" maxValue="1" nullable="no" description="When non-zero, PowerShell errors are ignored." />
 
     <columnDefinition name="Order" type="number" category="integer" length="4" minValue="0" maxValue="2000000000" nullable="no" description="Order of execution." />
     <columnDefinition name="Condition" type="string" length="0" modularize="property" nullable="yes" category="condition" />
