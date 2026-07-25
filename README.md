@@ -15,7 +15,7 @@ All ready to add to an existing Wix project. Grab the latest version from https:
 
 ```xml
     <?xml version="1.0" encoding="UTF-8"?>
-    <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
+    <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
 ```
 
 4. To execute a .ps1 file that ships with the project

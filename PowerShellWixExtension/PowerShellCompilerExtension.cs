@@ -1,214 +1,193 @@
-﻿using System;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
-using Microsoft.Tools.WindowsInstallerXml;
+using System.Xml.Linq;
+using WixToolset.Data;
+using WixToolset.Extensibility;
 
 namespace PowerShellWixExtension
 {
-    public class PowerShellCompilerExtension : CompilerExtension
+    public sealed class PowerShellCompilerExtension : BaseCompilerExtension
     {
-        private readonly XmlSchema _schema;
+        public override XNamespace Namespace => "http://schemas.gardiner.net.au/PowerShellWixExtensionSchema";
 
-        public PowerShellCompilerExtension()
+        public override void ParseElement(Intermediate intermediate, IntermediateSection section, XElement parentElement, XElement element, IDictionary<string, string> contextValues)
         {
-            _schema = LoadXmlSchemaHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellWixExtensionSchema.xsd");
-        }
-
-        public override XmlSchema Schema
-        {
-            get
+            switch (parentElement.Name.LocalName)
             {
-                return _schema;
-            }
-        }
-
-        public override void ParseElement(SourceLineNumberCollection sourceLineNumbers, XmlElement parentElement, XmlElement element, params string[] contextValues)
-        {
-            switch (parentElement.LocalName)
-            {
-                case "Product":
+                case "Package":
                 case "Fragment":
-                    switch (element.LocalName)
+                    switch (element.Name.LocalName)
                     {
                         case "Script":
-                            ParseScriptElement(element);
+                            this.ParseScriptElement(intermediate, section, element);
                             break;
                         case "File":
-                            ParseFileElement(element);
+                            this.ParseFileElement(intermediate, section, element);
                             break;
                         default:
-                            Core.UnexpectedElement(parentElement, element);
+                            this.ParseHelper.UnexpectedElement(parentElement, element);
                             break;
                     }
 
                     break;
                 default:
-                    Core.UnexpectedElement(
-                        parentElement,
-                        element);
+                    this.ParseHelper.UnexpectedElement(parentElement, element);
                     break;
             }
         }
 
-        private void ParseFileElement(XmlNode node)
+        private void ParseFileElement(Intermediate intermediate, IntermediateSection section, XElement node)
         {
-            SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
+            var sourceLineNumber = this.ParseHelper.GetSourceLineNumbers(node);
 
-            string superElementId = null;
+            Identifier superElementId = null;
             string file = null;
             string arguments = null;
             string condition = null;
             var elevated = YesNoType.No;
-            YesNoType ignoreErrors = YesNoType.No;
-            int order = 1000000000 + sourceLineNumber[0].LineNumber;
+            var ignoreErrors = YesNoType.No;
+            var order = 1000000000 + sourceLineNumber.LineNumber;
 
-            foreach (XmlAttribute attribute in node.Attributes)
+            foreach (var attribute in node.Attributes())
             {
-                if (attribute.NamespaceURI.Length == 0 ||
-                    attribute.NamespaceURI == _schema.TargetNamespace)
+                if (string.IsNullOrEmpty(attribute.Name.NamespaceName) || this.Namespace == attribute.Name.Namespace)
                 {
-                    switch (attribute.LocalName)
+                    switch (attribute.Name.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
+                            superElementId = this.ParseHelper.GetAttributeIdentifier(sourceLineNumber, attribute);
                             break;
                         case "File":
-                            file = Core.GetAttributeValue(sourceLineNumber, attribute, false);
+                            file = this.ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         case "Arguments":
-                            arguments = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            arguments = this.ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         case "Elevated":
-                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            elevated = this.ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "IgnoreErrors":
-                            ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            ignoreErrors = this.ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "Order":
-                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            order = this.ParseHelper.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
                         case "Condition":
-                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            condition = this.ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
                         default:
-                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
+                            this.ParseHelper.UnexpectedAttribute(node, attribute);
                             break;
                     }
                 }
                 else
                 {
-                    Core.UnsupportedExtensionAttribute(sourceLineNumber, attribute);
+                    this.ParseHelper.ParseExtensionAttribute(this.Context.Extensions, intermediate, section, node, attribute);
                 }
             }
 
-            if (string.IsNullOrEmpty(superElementId))
+            if (superElementId == null)
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedAttribute(sourceLineNumber, node.Name, "Id"));
+                this.Messaging.Write(ErrorMessages.ExpectedAttribute(sourceLineNumber, node.Name.LocalName, "Id"));
             }
 
             if (string.IsNullOrEmpty(file))
             {
-                Core.OnMessage(
-                    WixErrors.ExpectedElement(sourceLineNumber, node.Name, "File"));
+                this.Messaging.Write(ErrorMessages.ExpectedAttribute(sourceLineNumber, node.Name.LocalName, "File"));
             }
 
-            if (!Core.EncounteredError)
+            if (!this.Messaging.EncounteredError)
             {
-                Row superElementRow = Core.CreateRow(sourceLineNumber, "PowerShellFiles");
-
-                superElementRow[0] = superElementId;
-                superElementRow[1] = file;
-                superElementRow[2] = arguments;
-                superElementRow[3] = elevated == YesNoType.Yes ? 1 : 0;
-                superElementRow[4] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
-                superElementRow[5] = order;
-                superElementRow[6] = condition;
+                var symbol = this.ParseHelper.CreateSymbol(section, sourceLineNumber, PowerShellSymbolDefinitions.PowerShellFile, superElementId);
+                symbol.Set((int)PowerShellFileSymbolFields.File, file);
+                symbol.Set((int)PowerShellFileSymbolFields.Arguments, arguments);
+                symbol.Set((int)PowerShellFileSymbolFields.Elevated, elevated == YesNoType.Yes ? 1 : 0);
+                symbol.Set((int)PowerShellFileSymbolFields.IgnoreErrors, ignoreErrors == YesNoType.Yes ? 1 : 0);
+                symbol.Set((int)PowerShellFileSymbolFields.Order, order);
+                symbol.Set((int)PowerShellFileSymbolFields.Condition, condition);
             }
 
-            Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
+            this.ParseHelper.CreateSimpleReference(section, sourceLineNumber, "CustomAction", "PowerShellFilesImmediate");
         }
 
-        private void ParseScriptElement(XmlNode node)
+        private void ParseScriptElement(Intermediate intermediate, IntermediateSection section, XElement node)
         {
-            SourceLineNumberCollection sourceLineNumber = Preprocessor.GetSourceLineNumbers(node);
+            var sourceLineNumber = this.ParseHelper.GetSourceLineNumbers(node);
 
-            string superElementId = null;
+            Identifier superElementId = null;
             string scriptData = null;
             string condition = null;
             var elevated = YesNoType.No;
-            YesNoType ignoreErrors = YesNoType.No;
-            int order = 1000000000 + sourceLineNumber[0].LineNumber;
+            var ignoreErrors = YesNoType.No;
+            var order = 1000000000 + sourceLineNumber.LineNumber;
 
-            foreach (XmlAttribute attribute in node.Attributes)
+            foreach (var attribute in node.Attributes())
             {
-                if (attribute.NamespaceURI.Length == 0 ||
-                    attribute.NamespaceURI == _schema.TargetNamespace)
+                if (string.IsNullOrEmpty(attribute.Name.NamespaceName) || this.Namespace == attribute.Name.Namespace)
                 {
-                    switch (attribute.LocalName)
+                    switch (attribute.Name.LocalName)
                     {
                         case "Id":
-                            superElementId = Core.GetAttributeIdentifierValue(sourceLineNumber, attribute);
+                            superElementId = this.ParseHelper.GetAttributeIdentifier(sourceLineNumber, attribute);
                             break;
                         case "Elevated":
-                            elevated = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            elevated = this.ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "IgnoreErrors":
-                            ignoreErrors = Core.GetAttributeYesNoValue(sourceLineNumber, attribute);
+                            ignoreErrors = this.ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
                         case "Order":
-                            order = Core.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
+                            order = this.ParseHelper.GetAttributeIntegerValue(sourceLineNumber, attribute, 0, 1000000000);
                             break;
                         case "Condition":
-                            condition = Core.GetAttributeValue(sourceLineNumber, attribute);
+                            condition = this.ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
                             break;
-
                         default:
-                            Core.UnexpectedAttribute(sourceLineNumber, attribute);
+                            this.ParseHelper.UnexpectedAttribute(node, attribute);
                             break;
                     }
                 }
                 else
                 {
-                    Core.UnsupportedExtensionAttribute(sourceLineNumber, attribute);
+                    this.ParseHelper.ParseExtensionAttribute(this.Context.Extensions, intermediate, section, node, attribute);
                 }
             }
 
-            if (node.HasChildNodes)
+            var cdata = node.Nodes().OfType<XCData>().FirstOrDefault();
+            if (cdata != null)
             {
-                var cdata = node.ChildNodes[0] as XmlCDataSection;
-
-                if (cdata != null)
-
-                    // Need to encode, as column doesn't like having line feeds
-                    scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(cdata.Data));
+                scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(cdata.Value));
+            }
+            else if (!string.IsNullOrWhiteSpace(node.Value))
+            {
+                scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(node.Value));
             }
 
-            if (string.IsNullOrEmpty(superElementId))
+            this.ParseHelper.ParseForExtensionElements(this.Context.Extensions, intermediate, section, node);
+
+            if (superElementId == null)
             {
-                Core.OnMessage(WixErrors.ExpectedAttribute(sourceLineNumber, node.Name, "Id"));
+                this.Messaging.Write(ErrorMessages.ExpectedAttribute(sourceLineNumber, node.Name.LocalName, "Id"));
             }
 
             if (string.IsNullOrEmpty(scriptData))
             {
-                Core.OnMessage(WixErrors.ExpectedElement(sourceLineNumber, node.Name, "CDATA"));
+                this.Messaging.Write(ErrorMessages.ExpectedElement(sourceLineNumber, node.Name.LocalName, "CDATA"));
             }
 
-            if (!Core.EncounteredError)
+            if (!this.Messaging.EncounteredError)
             {
-                Row superElementRow = Core.CreateRow(sourceLineNumber, "PowerShellScripts");
-
-                superElementRow[0] = superElementId;
-                superElementRow[1] = scriptData;
-                superElementRow[2] = elevated == YesNoType.Yes ? 1 : 0;
-                superElementRow[3] = (ignoreErrors == YesNoType.Yes) ? 1 : 0;
-                superElementRow[4] = order;
-                superElementRow[5] = condition;
+                var symbol = this.ParseHelper.CreateSymbol(section, sourceLineNumber, PowerShellSymbolDefinitions.PowerShellScript, superElementId);
+                symbol.Set((int)PowerShellScriptSymbolFields.Script, scriptData);
+                symbol.Set((int)PowerShellScriptSymbolFields.Elevated, elevated == YesNoType.Yes ? 1 : 0);
+                symbol.Set((int)PowerShellScriptSymbolFields.IgnoreErrors, ignoreErrors == YesNoType.Yes ? 1 : 0);
+                symbol.Set((int)PowerShellScriptSymbolFields.Order, order);
+                symbol.Set((int)PowerShellScriptSymbolFields.Condition, condition);
             }
 
-            Core.CreateWixSimpleReferenceRow(sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");
+            this.ParseHelper.CreateSimpleReference(section, sourceLineNumber, "CustomAction", "PowerShellScriptsImmediate");
         }
     }
 }

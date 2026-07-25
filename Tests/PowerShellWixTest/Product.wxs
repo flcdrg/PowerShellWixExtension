@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
-  <Product Id="*" Name="PowerShellWixTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="C61298AF-D8C9-4179-903F-F42FA69B59AD">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
-
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
+  <Package Name="PowerShellWixTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="C61298AF-D8C9-4179-903F-F42FA69B59AD">
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
@@ -97,14 +95,12 @@
     </UI>
 
     <UIRef Id="WixUI_Common" />
-  </Product>
+  </Package>
 
   <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="PowerShellWixTest" />
-      </Directory>
-    </Directory>
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="PowerShellWixTest" />
+    </StandardDirectory>
   </Fragment>
 
   <Fragment>

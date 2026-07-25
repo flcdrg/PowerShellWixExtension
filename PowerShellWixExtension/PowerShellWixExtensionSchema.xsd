@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="PowerShellWixExtensionSchema"
     targetNamespace="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema"
     elementFormDefault="qualified"
-    xmlns="http://schemas.gardiner.net.au/PowerShellWixExtensionScheman"
+    xmlns="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xse="http://schemas.microsoft.com/wix/2005/XmlSchemaExtension"
-           xmlns:wix="http://schemas.microsoft.com/wix/2006/wi"
+    xmlns:wix="http://wixtoolset.org/schemas/v4/wxs"
 >
   <xs:annotation>
     <xs:documentation>
@@ -13,13 +13,13 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:import namespace="http://schemas.microsoft.com/wix/2006/wi" />
+  <xs:import namespace="http://wixtoolset.org/schemas/v4/wxs" />
   
   <xs:element name="Script">
     <xs:annotation>
       <xs:appinfo>
-        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Product" />
-        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Fragment" />
+        <xse:parent namespace="http://wixtoolset.org/schemas/v4/wxs" ref="Package" />
+        <xse:parent namespace="http://wixtoolset.org/schemas/v4/wxs" ref="Fragment" />
       </xs:appinfo>
       <xs:documentation>
         Embed PowerShell commands using CDATA
@@ -71,8 +71,8 @@
   <xs:element name="File">
     <xs:annotation>
       <xs:appinfo>
-        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Product" />
-        <xse:parent namespace="http://schemas.microsoft.com/wix/2006/wi" ref="Fragment" />
+        <xse:parent namespace="http://wixtoolset.org/schemas/v4/wxs" ref="Package" />
+        <xse:parent namespace="http://wixtoolset.org/schemas/v4/wxs" ref="Fragment" />
       </xs:appinfo>
       <xs:documentation>
         Run a PowerShell script file

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
-    <Product Id="*" Name="PowerShellWixInlineScriptTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="DEC23BB5-D23B-4B27-9006-252AC8142BA1">
-      <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
+    <Package Name="PowerShellWixInlineScriptTest" Language="1033" Version="1.0.0.0" Manufacturer="David Gardiner" UpgradeCode="DEC23BB5-D23B-4B27-9006-252AC8142BA1">
       <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
       <MediaTemplate EmbedCab="yes" />
 
@@ -12,7 +10,7 @@
 
       <InstallExecuteSequence>
         <!-- Override default action sequence -->
-        <Custom Action="PowerShellScriptsDeferred" After="RegisterUser">NOT Installed</Custom>
+        <Custom Action="override PowerShellScriptsDeferred" After="RegisterUser">NOT Installed</Custom>
       </InstallExecuteSequence>
       
       <powershell:Script Id="Script2" Elevated="no">
@@ -49,15 +47,12 @@
 
         <UIRef Id="WixUI_Minimal" />
 
-    </Product>
+    </Package>
 
     <Fragment>
-        <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="ProgramFilesFolder">
-                <Directory Id="INSTALLFOLDER" Name="PowerShellWixInlineScriptTest">
-                </Directory>
-            </Directory>
-        </Directory>
+        <StandardDirectory Id="ProgramFilesFolder">
+            <Directory Id="INSTALLFOLDER" Name="PowerShellWixInlineScriptTest" />
+        </StandardDirectory>
     </Fragment>
 
     <Fragment>
