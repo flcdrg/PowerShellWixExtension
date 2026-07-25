@@ -10,7 +10,7 @@
 
       <InstallExecuteSequence>
         <!-- Override default action sequence -->
-        <Custom Action="override PowerShellScriptsDeferred" After="RegisterUser">NOT Installed</Custom>
+        <Custom Action="override PowerShellScriptsDeferred" After="RegisterUser" Condition="NOT Installed" />
       </InstallExecuteSequence>
       
       <powershell:Script Id="Script2" Elevated="no">

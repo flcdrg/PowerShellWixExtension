@@ -16,7 +16,7 @@
   <ItemGroup>
     <EmbeddedResource Include="PowerShellWixExtensionSchema.xsd" />
     <EmbeddedResource Include="TableDefinitions.xml" />
-    <EmbeddedResource Include="..\PowerShellLibrary\bin\$(Configuration)\PowerShellLibrary.wixlib" Link="PowerShellLibrary.wixlib" />
+    <EmbeddedResource Include="..\PowerShellLibrary\bin\x86\$(Configuration)\PowerShellLibrary.wixlib" Link="PowerShellLibrary.wixlib" />
   </ItemGroup>
 
   <Target Name="AfterBuild">

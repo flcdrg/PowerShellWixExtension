@@ -24,36 +24,36 @@
     <CustomAction Id="PowerShellFilesElevatedUninstallDeferred" BinaryRef="CA_DLL" DllEntry="PowerShellFilesElevatedUninstallDeferred" Impersonate="no" Execute="deferred" Return="check" />
 
     <InstallExecuteSequence>
-      <Custom Action="virtual PowerShellScriptsImmediate" Before="PowerShellScriptsDeferred">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellScriptsElevatedImmediate" Before="PowerShellScriptsElevatedDeferred">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellFilesImmediate" Before="PowerShellFilesDeferred">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellFilesElevatedImmediate" Before="PowerShellFilesElevatedDeferred">NOT Installed</Custom>
+      <Custom Action="virtual PowerShellScriptsImmediate" Before="PowerShellScriptsDeferred" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellScriptsElevatedImmediate" Before="PowerShellScriptsElevatedDeferred" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellFilesImmediate" Before="PowerShellFilesDeferred" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellFilesElevatedImmediate" Before="PowerShellFilesElevatedDeferred" Condition="NOT Installed" />
 
-      <Custom Action="virtual PowerShellScriptsDeferred" After="InstallFiles">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellScriptsElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellFilesDeferred" After="InstallFiles">NOT Installed</Custom>
-      <Custom Action="virtual PowerShellFilesElevatedDeferred" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="virtual PowerShellScriptsDeferred" After="InstallFiles" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellScriptsElevatedDeferred" After="InstallFiles" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellFilesDeferred" After="InstallFiles" Condition="NOT Installed" />
+      <Custom Action="virtual PowerShellFilesElevatedDeferred" After="InstallFiles" Condition="NOT Installed" />
 
-      <Custom Action="virtual PowerShellScriptsUninstall" Before="PowerShellScriptsUninstallDeferred">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellScriptsElevatedUninstall" Before="PowerShellScriptsElevatedUninstallDeferred">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellFilesUninstall" Before="PowerShellFilesUninstallDeferred">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellFilesElevatedUninstall" Before="PowerShellFilesElevatedUninstallDeferred">REMOVE="ALL"</Custom>
+      <Custom Action="virtual PowerShellScriptsUninstall" Before="PowerShellScriptsUninstallDeferred" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellScriptsElevatedUninstall" Before="PowerShellScriptsElevatedUninstallDeferred" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellFilesUninstall" Before="PowerShellFilesUninstallDeferred" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellFilesElevatedUninstall" Before="PowerShellFilesElevatedUninstallDeferred" Condition="REMOVE=&quot;ALL&quot;" />
 
-      <Custom Action="virtual PowerShellScriptsUninstallDeferred" After="RemoveFiles">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellScriptsElevatedUninstallDeferred" After="RemoveFiles">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellFilesUninstallDeferred" After="RemoveFiles">REMOVE="ALL"</Custom>
-      <Custom Action="virtual PowerShellFilesElevatedUninstallDeferred" After="RemoveFiles">REMOVE="ALL"</Custom>
+      <Custom Action="virtual PowerShellScriptsUninstallDeferred" After="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellScriptsElevatedUninstallDeferred" After="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellFilesUninstallDeferred" After="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="virtual PowerShellFilesElevatedUninstallDeferred" After="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
     </InstallExecuteSequence>
 
     <UI>
-      <ProgressText Action="PowerShellFilesDeferred">PowerShell Files</ProgressText>
-      <ProgressText Action="PowerShellScriptsDeferred">PowerShell Inline</ProgressText>
-      <ProgressText Action="PowerShellScriptsElevatedDeferred">PowerShell Inline (elevated)</ProgressText>
-      <ProgressText Action="PowerShellFilesElevatedDeferred">PowerShell Files (elevated)</ProgressText>
-      <ProgressText Action="PowerShellFilesUninstallDeferred">PowerShell Uninstall Files</ProgressText>
-      <ProgressText Action="PowerShellScriptsUninstallDeferred">PowerShell Uninstall Inline</ProgressText>
-      <ProgressText Action="PowerShellScriptsElevatedUninstallDeferred">PowerShell Uninstall Inline (elevated)</ProgressText>
-      <ProgressText Action="PowerShellFilesElevatedUninstallDeferred">PowerShell Uninstall Files (elevated)</ProgressText>
+      <ProgressText Action="PowerShellFilesDeferred" Message="PowerShell Files" />
+      <ProgressText Action="PowerShellScriptsDeferred" Message="PowerShell Inline" />
+      <ProgressText Action="PowerShellScriptsElevatedDeferred" Message="PowerShell Inline (elevated)" />
+      <ProgressText Action="PowerShellFilesElevatedDeferred" Message="PowerShell Files (elevated)" />
+      <ProgressText Action="PowerShellFilesUninstallDeferred" Message="PowerShell Uninstall Files" />
+      <ProgressText Action="PowerShellScriptsUninstallDeferred" Message="PowerShell Uninstall Inline" />
+      <ProgressText Action="PowerShellScriptsElevatedUninstallDeferred" Message="PowerShell Uninstall Inline (elevated)" />
+      <ProgressText Action="PowerShellFilesElevatedUninstallDeferred" Message="PowerShell Uninstall Files (elevated)" />
     </UI>
   </Fragment>
 </Wix>
