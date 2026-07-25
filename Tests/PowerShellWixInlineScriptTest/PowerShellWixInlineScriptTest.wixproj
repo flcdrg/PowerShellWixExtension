@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <WixExtension Include="..\..\Libs\PowerShellWixExtension.dll" />
+    <WixExtension Include="..\..\PowerShellWixExtension\bin\$(Configuration)\net472\PowerShellWixExtension.dll" />
   </ItemGroup>
 
   <ItemGroup>
