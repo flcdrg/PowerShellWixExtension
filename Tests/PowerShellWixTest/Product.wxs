@@ -89,7 +89,7 @@
       <DialogRef Id="ProgressDlg" />
       <DialogRef Id="UserExit" />
 
-      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" Condition="1" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />
 
       <Property Id="ARPNOMODIFY" Value="1" />
     </UI>
