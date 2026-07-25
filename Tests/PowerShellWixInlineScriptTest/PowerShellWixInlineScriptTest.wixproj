@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="WixToolset.Sdk/6.0.2">
   <ItemGroup>
+    <ProjectReference Include="..\..\PowerShellWixExtension\PowerShellWixExtension.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <ItemGroup>
     <WixExtension Include="..\..\Libs\PowerShellWixExtension.dll" />
   </ItemGroup>
 

@@ -86,10 +86,10 @@
       <DialogRef Id="ErrorDlg" />
       <DialogRef Id="FatalError" />
       <DialogRef Id="FilesInUse" />
-      <DialogRef Id="ProgressDlg2" />
+      <DialogRef Id="ProgressDlg" />
       <DialogRef Id="UserExit" />
 
-      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" Condition="1" />
 
       <Property Id="ARPNOMODIFY" Value="1" />
     </UI>
