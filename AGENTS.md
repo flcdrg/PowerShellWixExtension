@@ -5,21 +5,21 @@
 This repository is built and tested on **Windows** (WiX + MSI tooling required).
 
 ```powershell
-# Restore
-nuget restore
+# Restore dependencies (automatic with dotnet build, but can run explicitly)
+dotnet restore
 
-# Build all projects (same command used in CI)
-msbuild PowerShellWixExtension.sln /p:Configuration=Release
+# Build all projects
+dotnet build PowerShellWixExtension.sln --configuration Release
 ```
 
 Integration tests are MSI install/uninstall + Pester log assertions:
 
 ```powershell
 # Build test MSIs first, then run install/uninstall like CI
-Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixInlineScriptTest\bin\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx $pwd\inlinescript-install.log"
-Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixInlineScriptTest\bin\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx $pwd\inlinescript-uninstall.log"
-Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixTest\bin\Release\PowerShellWixTest.msi /q /liwearucmopvx $pwd\script-install.log"
-Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixTest\bin\Release\PowerShellWixTest.msi /q /liwearucmopvx $pwd\script-uninstall.log"
+Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixInlineScriptTest\bin\x86\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx $pwd\inlinescript-install.log"
+Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixInlineScriptTest\bin\x86\Release\PowerShellWixInlineScriptTest.msi /q /liwearucmopvx $pwd\inlinescript-uninstall.log"
+Start-Process msiexec.exe -Wait -ArgumentList "/i Tests\PowerShellWixTest\bin\x86\Release\PowerShellWixTest.msi /q /liwearucmopvx $pwd\script-install.log"
+Start-Process msiexec.exe -Wait -ArgumentList "/x Tests\PowerShellWixTest\bin\x86\Release\PowerShellWixTest.msi /q /liwearucmopvx $pwd\script-uninstall.log"
 
 # Run Pester assertions
 Invoke-Pester -Path .\Tests\Pester.Tests.ps1
