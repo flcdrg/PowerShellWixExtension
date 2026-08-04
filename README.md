@@ -15,7 +15,7 @@ All ready to add to an existing Wix project. Grab the latest version from https:
 
 ```xml
     <?xml version="1.0" encoding="UTF-8"?>
-    <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
+    <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:powershell="http://schemas.gardiner.net.au/PowerShellWixExtensionSchema">
 ```
 
 4. To execute a .ps1 file that ships with the project
@@ -24,7 +24,23 @@ All ready to add to an existing Wix project. Grab the latest version from https:
    <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 2"/>
 ```
 
-5. To execute inline script use
+5. To execute inline script, use the `Script` attribute with Base64-encoded content
+
+```xml
+    <powershell:Script Id="Script2" Script="VwByAGkAdABlAC0ASABvAHMAdAAgACIASABlAGwAbABvIAAoAHcAbwByAGwAZAApACI="/>
+```
+
+The script content must be **Base64-encoded UTF-16 (Unicode)** string. To encode a PowerShell script:
+
+```powershell
+$script = "Write-Host 'Hello (world)'"
+$encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($script))
+Write-Host $encoded
+```
+
+### Legacy Inner Text Format (WiX 4 / v3)
+
+For backwards compatibility, inline scripts can still use inner text/CDATA (though this may not work with WiX 6+ strict XML validation):
 
 ```xml
     <powershell:Script Id="Script2">
@@ -41,7 +57,19 @@ All ready to add to an existing Wix project. Grab the latest version from https:
     </powershell:Script>
 ```
 
+**Note**: The compiler will automatically handle both formats, but using the `Script` attribute (Base64-encoded) is recommended for WiX 6+ compatibility.
+
 ## Notes
+
+### WiX 6 Migration
+
+This extension has been updated to support WiX 6 with the following changes:
+
+1. **Script elements require Base64-encoded content**: WiX 6 enforces stricter XML schema validation and does not allow inner text on custom extension elements. Use the `Script` attribute with Base64-encoded UTF-16 content instead.
+
+2. **Namespace remains v4**: Despite WiX version 6, the XML namespace remains `http://wixtoolset.org/schemas/v4/wxs` for backwards compatibility.
+
+3. **Platform-specific custom actions**: The underlying PowerShell custom actions use the `Wix4` prefix and platform suffix (`_X86`, `_X64`, `_A64`), following WiX 6 conventions. The extension handles these transparently.
 
 ### Custom sequences
 
@@ -63,3 +91,4 @@ The four defined actions are:
 ### Inline Scripts
 
 * Be aware that if your inline script uses square brackets \[ \], you'll need to escape them like [\\[] [\\]] otherwise they will be interpreted as MSI properties (unless that is what you wanted!)
+* When using the `Script` attribute (Base64-encoded), square brackets are automatically protected by encoding

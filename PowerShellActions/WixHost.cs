@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Management.Automation.Host;
 using System.Threading;
 
-using Microsoft.Deployment.WindowsInstaller;
+using WixToolset.Dtf.WindowsInstaller;
 
 namespace PowerShellActions
 {
