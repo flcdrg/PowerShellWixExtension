@@ -66,13 +66,13 @@ if (-not $SkipInstall -and -not $TestOnly) {
             $args = "/x `"$($msi.Path)`" /q /liwearucmopvx `"$pwd\$($msi.Log)`""
         }
         
-        Start-Process msiexec.exe -Wait -ArgumentList $args
+        $proc = Start-Process msiexec.exe -Wait -PassThru -ArgumentList $args
         
-        if ($LASTEXITCODE -eq 0) {
+        if ($proc.ExitCode -eq 0) {
             Write-Host "  ✅ $($msi.Action) succeeded" -ForegroundColor Green
         } else {
-            Write-Host "  ⚠️  Exit code: $LASTEXITCODE" -ForegroundColor Yellow
-            # Don't fail on MSI exit codes - they might be 0 for success or 1602 for user cancel
+            Write-Host "  ⚠️  Exit code: $($proc.ExitCode)" -ForegroundColor Yellow
+            # Don't fail on MSI exit codes - they might be 3010 or 1602 depending on context
         }
     }
     

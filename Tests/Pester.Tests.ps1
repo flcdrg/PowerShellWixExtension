@@ -71,8 +71,8 @@ Describe 'External Script Files' {
         $logContent = Get-Content 'script-install.log' -Raw
         
         # Verify multiple scripts ran
-        $logContent | Should -Match 'This is an inline script, running non-elevated'
         $logContent | Should -Match 'This is going to Output'
+        $logContent | Should -Match 'Testing Test.ps1'
     }
 
     It 'Uninstall - Log file exists' {

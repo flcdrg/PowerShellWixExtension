@@ -71,16 +71,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v3.0.0
-
-      - name: NuGet Restore
-        run: nuget restore
-
       - name: Build
         run: |
-          msbuild .\PowerShellWixExtension\PowerShellWixExtension.csproj /p:Configuration=$env:Configuration
-          msbuild PowerShellWixExtension.sln /p:Configuration=$env:Configuration
+          dotnet build .\PowerShellWixExtension\PowerShellWixExtension.csproj /p:Configuration=$env:Configuration
+          dotnet build PowerShellWixExtension.sln /p:Configuration=$env:Configuration
         # NBGV is run as part of the build, so actions after here have access to NBGV_ env variables.
 
       # For some reason, running msiexec from Pester doesn't work quite right.
@@ -106,7 +100,7 @@ jobs:
           path: ${{ github.workspace }}\**\*.log
 
       - name: Pack
-        run: nuget pack .\PowerShellWixExtension.nuspec -Version "$env:NBGV_NuGetPackageVersion" -Properties "Configuration=$env:Configuration;releasenotes=$env:Release_body"
+        run: dotnet pack .\PowerShellWixExtension.nuspec -Version "$env:NBGV_NuGetPackageVersion" -Properties "Configuration=$env:Configuration;releasenotes=$env:Release_body"
 
       - uses: actions/upload-artifact@v7
         with:
