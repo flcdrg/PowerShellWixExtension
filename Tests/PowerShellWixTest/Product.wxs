@@ -24,55 +24,17 @@
     <powershell:File Id="PSFile1" File="[#TestPs1]" Arguments="&quot;First Argument&quot; 1" />
     <powershell:File Id="PSFile2" File="[#TestPs1]" Arguments="&quot;Second Argument&quot; 2" Elevated="yes" />
 
-    <powershell:Script Id="Script2" Elevated="no">
-      <![CDATA[
+    <powershell:Script Id="Script2" Elevated="no" Script="IwAgAE4AbwB0AGUALAAgAGYAbwByACAAaQBuAGwAaQBuAGUAIABzAGMAcgBpAHAAdABzACAAcwBxAHUAYQByAGUAIABiAHIAYQBjAGsAZQB0AHMAIABuAGUAZQBkACAAdABvACAAYgBlACAAZQBzAGMAYQBwAGUAZAAgAHMAbwAgAHQAaABlAHkAIABkAG8AbgAnAHQAIABnAGUAdAAgAGkAbgB0AGUAcgBwAHIAZQB0AGUAZAAgAGEAcwAgAE0AUwBJACAAcAByAG8AcABlAHIAdABpAGUAcwAKACAAIAAgACAAIAAgACAAIAAkAHcAaQBkAD0AWwBcAFsAXQBTAHkAcwB0AGUAbQAuAFMAZQBjAHUAcgBpAHQAeQAuAFAAcgBpAG4AYwBpAHAAYQBsAC4AVwBpAG4AZABvAHcAcwBJAGQAZQBuAHQAaQB0AHkAWwBcAF0AXQA6ADoARwBlAHQAQwB1AHIAcgBlAG4AdAAoACkACgAgACAAIAAgACAAIAAgACAAJABwAHIAcAA9AG4AZQB3AC0AbwBiAGoAZQBjAHQAIABTAHkAcwB0AGUAbQAuAFMAZQBjAHUAcgBpAHQAeQAuAFAAcgBpAG4AYwBpAHAAYQBsAC4AVwBpAG4AZABvAHcAcwBQAHIAaQBuAGMAaQBwAGEAbAAoACQAdwBpAGQAKQAKACAAIAAgACAAIAAgACAAIAAkAGEAZABtAD0AWwBcAFsAXQBTAHkAcwB0AGUAbQAuAFMAZQBjAHUAcgBpAHQAeQAuAFAAcgBpAG4AYwBpAHAAYQBsAC4AVwBpAG4AZABvAHcAcwBCAHUAaQBsAHQASQBuAFIAbwBsAGUAWwBcAF0AXQA6ADoAQQBkAG0AaQBuAGkAcwB0AHIAYQB0AG8AcgAKACAAIAAgACAACgAgACAAIAAgACAAIAAgACAAVwByAGkAdABlAC0ASABvAHMAdAAgACQAdwBpAGQALgBOAGEAbQBlAAoAIAAgACAAIAAgACAAIAAgAFcAcgBpAHQAZQAtAEgAbwBzAHQAIAAkAHAAcgBwAC4ASQBzAEkAbgBSAG8AbABlACgAJABhAGQAbQApAAoACgAgACAAIAAgACAAIAAgACAAZgBvAHIAIAAoACQAaQAgAD0AIAAxADsAIAAkAGkAIAAtAGwAZQAgADEAMAAwADsAIAAkAGkAIAArAD0AIAAyACkAIAAKACAAIAAgACAAIAAgACAAIAB7ACAACgAgACAAIAAgACAAIAAgACAAIAAgAFcAcgBpAHQAZQAtAFAAcgBvAGcAcgBlAHMAcwAgAC0AQQBjAHQAaQB2AGkAdAB5ACAAIgBBAGMAdABpAHYAaQB0AHkAIgAgAC0AUwB0AGEAdAB1AHMAIAAiAFMAdABhAHQAdQBzACAAJABpACUAIABjAG8AbQBwAGwAZQB0AGUAIgAgAC0AQwB1AHIAcgBlAG4AdABPAHAAZQByAGEAdABpAG8AbgAgACIATwBwAGUAcgBhAHQAaQBvAG4AIAAkAGkAIgAgAC0AUABlAHIAYwBlAG4AdABDAG8AbQBwAGwAZQB0AGUAIAAkAGkACgAgACAAIAAgACAAIAAgACAAIAAgAFMAdABhAHIAdAAtAFMAbABlAGUAcAAgAC0ATQBpAGwAbABpAHMAZQBjAG8AbgBkAHMAIAAyADAAMAAKACAAIAAgACAAIAAgACAAIAB9AA==" />
 
-        # Note, for inline scripts square brackets need to be escaped so they don't get interpreted as MSI properties
-        $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
-        $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
-        $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
     
-        Write-Host $wid.Name
-        Write-Host $prp.IsInRole($adm)
+    <powershell:Script Id="Script3" Elevated="yes" Script="JAB3AGkAZAA9AFsAXABbAF0AUwB5AHMAdABlAG0ALgBTAGUAYwB1AHIAaQB0AHkALgBQAHIAaQBuAGMAaQBwAGEAbAAuAFcAaQBuAGQAbwB3AHMASQBkAGUAbgB0AGkAdAB5AFsAXABdAF0AOgA6AEcAZQB0AEMAdQByAHIAZQBuAHQAKAApAAoAIAAgACAAIAAgACAAIAAgACQAcAByAHAAPQBuAGUAdwAtAG8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBTAGUAYwB1AHIAaQB0AHkALgBQAHIAaQBuAGMAaQBwAGEAbAAuAFcAaQBuAGQAbwB3AHMAUAByAGkAbgBjAGkAcABhAGwAKAAkAHcAaQBkACkACgAgACAAIAAgACAAIAAgACAAJABhAGQAbQA9AFsAXABbAF0AUwB5AHMAdABlAG0ALgBTAGUAYwB1AHIAaQB0AHkALgBQAHIAaQBuAGMAaQBwAGEAbAAuAFcAaQBuAGQAbwB3AHMAQgB1AGkAbAB0AEkAbgBSAG8AbABlAFsAXABdAF0AOgA6AEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIACgAgACAAIAAgAAoAIAAgACAAIAAgACAAIAAgAFcAcgBpAHQAZQAtAEgAbwBzAHQAIAAkAHcAaQBkAC4ATgBhAG0AZQAKACAAIAAgACAAIAAgACAAIABXAHIAaQB0AGUALQBIAG8AcwB0ACAAJABwAHIAcAAuAEkAcwBJAG4AUgBvAGwAZQAoACQAYQBkAG0AKQA=" />
 
-        for ($i = 1; $i -le 100; $i += 2) 
-        { 
-          Write-Progress -Activity "Activity" -Status "Status $i% complete" -CurrentOperation "Operation $i" -PercentComplete $i
-          Start-Sleep -Milliseconds 200
-        }
-        
-        ]]>
-    </powershell:Script>
-    
-    <powershell:Script Id="Script3" Elevated="yes">
-      <![CDATA[
-        
-        $wid=[\[]System.Security.Principal.WindowsIdentity[\]]::GetCurrent()
-        $prp=new-object System.Security.Principal.WindowsPrincipal($wid)
-        $adm=[\[]System.Security.Principal.WindowsBuiltInRole[\]]::Administrator
-    
-        Write-Host $wid.Name
-        Write-Host $prp.IsInRole($adm)
-        ]]>
-    </powershell:Script>
 
-    <powershell:Script Id="Script4">
-      <![CDATA[
+    <powershell:Script Id="Script4" Script="IwAgAHQAaAByAG8AdwAgACIAbwBoACAAZABlAGEAcgAiADsACgAgACAAIAAgACAAIAAgACAAZQB4AGkAdAAgADEA" />
 
-        # throw "oh dear";
-        exit 1
 
-        
-        ]]>
-    </powershell:Script>
+    <powershell:Script Id="Script5" Script="VwByAGkAdABlAC0ASABvAHMAdAAgACIAVABoAGkAcwAgAHMAYwByAGkAcAB0ACAAcwBoAG8AdQBsAGQAIABuAG8AdAAgAHIAdQBuACAAYgBlAGMAYQB1AHMAZQAgAHQAaABlACAAcAByAGUAdgBpAG8AdQBzACAAbwBuAGUAIAByAGEAaQBzAGUAZAAgAGEAbgAgAGUAeABjAGUAcAB0AGkAbwBuACIA" />
 
-    <powershell:Script Id="Script5">
-      <![CDATA[
-
-        Write-Host "This script should not run because the previous one raised an exception"
-        
-        ]]>
-    </powershell:Script>
 
     
     <UI>
@@ -86,7 +48,6 @@
       <DialogRef Id="ErrorDlg" />
       <DialogRef Id="FatalError" />
       <DialogRef Id="FilesInUse" />
-      <DialogRef Id="ProgressDlg" />
       <DialogRef Id="UserExit" />
 
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />

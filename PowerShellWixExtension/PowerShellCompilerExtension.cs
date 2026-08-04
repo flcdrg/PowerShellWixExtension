@@ -132,6 +132,10 @@ namespace PowerShellWixExtension
                         case "Id":
                             superElementId = this.ParseHelper.GetAttributeIdentifier(sourceLineNumber, attribute);
                             break;
+                        case "Script":
+                            // Script attribute - already Base64 encoded from the WiX author
+                            scriptData = this.ParseHelper.GetAttributeValue(sourceLineNumber, attribute);
+                            break;
                         case "Elevated":
                             elevated = this.ParseHelper.GetAttributeYesNoValue(sourceLineNumber, attribute);
                             break;
@@ -155,14 +159,18 @@ namespace PowerShellWixExtension
                 }
             }
 
-            var cdata = node.Nodes().OfType<XCData>().FirstOrDefault();
-            if (cdata != null)
+            // If Script attribute not provided, try inner text (for backwards compatibility with WiX 4)
+            if (string.IsNullOrEmpty(scriptData))
             {
-                scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(cdata.Value));
-            }
-            else if (!string.IsNullOrWhiteSpace(node.Value))
-            {
-                scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(node.Value));
+                var cdata = node.Nodes().OfType<XCData>().FirstOrDefault();
+                if (cdata != null)
+                {
+                    scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(cdata.Value));
+                }
+                else if (!string.IsNullOrWhiteSpace(node.Value))
+                {
+                    scriptData = Convert.ToBase64String(Encoding.Unicode.GetBytes(node.Value));
+                }
             }
 
             this.ParseHelper.ParseForExtensionElements(this.Context.Extensions, intermediate, section, node);
