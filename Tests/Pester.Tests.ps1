@@ -6,18 +6,31 @@ if (-not $base) {
     $base = "."
 }
 
-# Check if we have the required log files (only present after successful MSI install)
-$hasLogFiles = (Test-Path 'inlinescript-install.log') -and (Test-Path 'script-install.log')
-
 # Check if running as admin (required for MSI installation)
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 
 if (-not $isAdmin) {
-    Write-Warning "Tests require administrator privileges to run MSI installations."
-    Write-Warning "Run PowerShell as Administrator and re-run: Invoke-Pester -Path .\Tests\Pester.Tests.ps1"
+    Write-Warning "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    Write-Warning "Tests require ADMINISTRATOR privileges"
+    Write-Warning "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    Write-Warning ""
+    Write-Warning "MSI installation requires admin rights to:"
+    Write-Warning "  • Install to Program Files"
+    Write-Warning "  • Write to HKEY_LOCAL_MACHINE registry"
+    Write-Warning ""
+    Write-Warning "Steps to run tests:"
+    Write-Warning "  1. Right-click PowerShell → 'Run as Administrator'"
+    Write-Warning "  2. cd D:\git\PowerShellWixExtension"
+    Write-Warning "  3. dotnet build PowerShellWixExtension.sln --configuration Release"
+    Write-Warning "  4. Run MSI installations (see PESTER_TESTS_ADMIN_REQUIREMENTS.md)"
+    Write-Warning "  5. Invoke-Pester -Path .\Tests\Pester.Tests.ps1"
+    Write-Warning ""
+    Write-Warning "GitHub Actions CI/CD has admin access and tests will pass there."
+    Write-Warning "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    Write-Warning ""
 }
 
-Describe 'Inline Scripts' -Skip:(-not $hasLogFiles) {
+Describe 'Inline Scripts' {
 
     It 'Install - Script executes and produces output' {
         'inlinescript-install.log' | Should -FileContentMatch 'This is an inline script, running non-elevated'
@@ -36,7 +49,7 @@ Describe 'Inline Scripts' -Skip:(-not $hasLogFiles) {
     }
 }
 
-Describe 'External Script Files' -Skip:(-not $hasLogFiles) {
+Describe 'External Script Files' {
 
     It 'Install - Script file executes successfully' {
         'script-install.log' | Should -FileContentMatch 'This is going to Output'
