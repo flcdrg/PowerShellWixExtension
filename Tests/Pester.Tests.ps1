@@ -6,7 +6,18 @@ if (-not $base) {
     $base = "."
 }
 
-Describe 'Inline Scripts' {
+# Check if we have the required log files (only present after successful MSI install)
+$hasLogFiles = (Test-Path 'inlinescript-install.log') -and (Test-Path 'script-install.log')
+
+# Check if running as admin (required for MSI installation)
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+
+if (-not $isAdmin) {
+    Write-Warning "Tests require administrator privileges to run MSI installations."
+    Write-Warning "Run PowerShell as Administrator and re-run: Invoke-Pester -Path .\Tests\Pester.Tests.ps1"
+}
+
+Describe 'Inline Scripts' -Skip:(-not $hasLogFiles) {
 
     It 'Install - Script executes and produces output' {
         'inlinescript-install.log' | Should -FileContentMatch 'This is an inline script, running non-elevated'
@@ -25,7 +36,7 @@ Describe 'Inline Scripts' {
     }
 }
 
-Describe 'External Script Files' {
+Describe 'External Script Files' -Skip:(-not $hasLogFiles) {
 
     It 'Install - Script file executes successfully' {
         'script-install.log' | Should -FileContentMatch 'This is going to Output'
