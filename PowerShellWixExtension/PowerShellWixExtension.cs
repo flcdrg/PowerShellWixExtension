@@ -1,33 +1,16 @@
-﻿using System.Reflection;
-using Microsoft.Tools.WindowsInstallerXml;
+using System;
+using System.Collections.Generic;
+using WixToolset.Extensibility;
 
 namespace PowerShellWixExtension
 {
-    public class PowerShellWixExtension : WixExtension
+    public sealed class PowerShellWixExtensionFactory : BaseExtensionFactory
     {
-        private CompilerExtension _compilerExtension;
-        private Library _library;
-        private TableDefinitionCollection _tableDefinitions;
-
-        public override CompilerExtension CompilerExtension
+        protected override IReadOnlyCollection<Type> ExtensionTypes => new[]
         {
-            get
-            {
-                return _compilerExtension ?? (_compilerExtension = new PowerShellCompilerExtension());
-            }
-        }
-
-        public override TableDefinitionCollection TableDefinitions
-        {
-            get
-            {
-                return _tableDefinitions ?? (_tableDefinitions = LoadTableDefinitionHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.TableDefinitions.xml"));
-            }
-        }
-
-        public override Library GetLibrary(TableDefinitionCollection tableDefinitions)
-        {
-            return _library ?? (_library = LoadLibraryHelper(Assembly.GetExecutingAssembly(), "PowerShellWixExtension.PowerShellLibrary.wixlib", tableDefinitions));
-        }
+            typeof(PowerShellCompilerExtension),
+            typeof(PowerShellExtensionData),
+            typeof(PowerShellWindowsInstallerBackendExtension),
+        };
     }
 }

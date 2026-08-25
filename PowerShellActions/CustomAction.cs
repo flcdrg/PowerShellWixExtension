@@ -2,9 +2,9 @@
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using Microsoft.Deployment.WindowsInstaller;
+using WixToolset.Dtf.WindowsInstaller;
 
-using View = Microsoft.Deployment.WindowsInstaller.View;
+using View = WixToolset.Dtf.WindowsInstaller.View;
 using System.Collections.Generic;
 using System.IO;
 
