@@ -6,7 +6,7 @@ using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Security;
 
-using Microsoft.Deployment.WindowsInstaller;
+using WixToolset.Dtf.WindowsInstaller;
 
 namespace PowerShellActions
 {

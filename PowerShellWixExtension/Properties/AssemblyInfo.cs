@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using Microsoft.Tools.WindowsInstallerXml;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -21,5 +20,3 @@ using Microsoft.Tools.WindowsInstallerXml;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7abfedd7-d0f1-489a-a1f4-fb5e3e0bd038")]
-
-[assembly: AssemblyDefaultWixExtension(typeof(PowerShellWixExtension.PowerShellWixExtension))]
